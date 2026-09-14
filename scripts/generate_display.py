@@ -68,6 +68,7 @@ def main():
     draw = ImageDraw.Draw(img)
 
     title_font = font(22)
+    section_font = font(13)
     answer_font = font(10)
     draw.text((MARGIN, 6), data.get("title", "高校入試 日替わり問題"), font=title_font, fill=0)
 
@@ -79,7 +80,13 @@ def main():
     choice_gap = 8
     choice_width = (col_width - choice_gap) // 2
 
-    top_y = 38
+    # Show the subject once per column, like the earlier layout.
+    left_x = MARGIN
+    right_x = MARGIN + col_width + col_gap
+    draw.text((left_x, 31), "英語", font=section_font, fill=0)
+    draw.text((right_x, 31), "社会", font=section_font, fill=0)
+
+    top_y = 48
     question_area_bottom = 438
     slot_h = (question_area_bottom - top_y) // 5
 
@@ -89,8 +96,7 @@ def main():
         for row, q in enumerate(qs):
             qnum = row + 1 + col * 5
             slot_y = top_y + row * slot_h
-            subject = "英語" if q["subject"] == "english" else "社会"
-            head = f"{qnum}. [{subject}] {q['question']}"
+            head = f"{qnum}. {q['question']}"
 
             qfont, qlines = fit_question(draw, head, col_width)
             line_h = qfont.size + 2 if hasattr(qfont, "size") else 13
@@ -101,8 +107,8 @@ def main():
                 y += line_h
 
             choices = q.get("choices", [])[:4]
-            choice_start_y = slot_y + 39
-            choice_row_h = 15
+            choice_start_y = slot_y + 37
+            choice_row_h = 14
 
             for i, choice in enumerate(choices):
                 r = i // 2
