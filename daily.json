@@ -1,0 +1,16 @@
+{
+  "date": "2026-09-14",
+  "title": "高校入試 日替わり問題 2026-09-14",
+  "questions": [
+    {"id":"eng-001","subject":"english","question":"I have lived in Tokyo ( ) 2018.","choices":["for","since","during","from"],"answer":"since"},
+    {"id":"eng-002","subject":"english","question":"My brother ( ) soccer every Sunday.","choices":["play","plays","played","playing"],"answer":"plays"},
+    {"id":"eng-003","subject":"english","question":"I went to the library ( ) a book.","choices":["borrow","borrowing","to borrow","borrowed"],"answer":"to borrow"},
+    {"id":"eng-004","subject":"english","question":"This book is ( ) than that one.","choices":["interesting","more interesting","most interesting","interest"],"answer":"more interesting"},
+    {"id":"eng-005","subject":"english","question":"English ( ) in many countries.","choices":["speaks","is spoken","spoke","speaking"],"answer":"is spoken"},
+    {"id":"soc-001","subject":"social","question":"日本で面積が最も大きい都道府県はどこですか。","choices":["北海道","岩手県","福島県","長野県"],"answer":"北海道"},
+    {"id":"soc-002","subject":"social","question":"江戸幕府を開いた人物は誰ですか。","choices":["織田信長","豊臣秀吉","徳川家康","徳川吉宗"],"answer":"徳川家康"},
+    {"id":"soc-003","subject":"social","question":"日本国憲法で、国の政治のあり方を最終的に決める権利が国民にあることを何といいますか。","choices":["基本的人権","国民主権","平和主義","三権分立"],"answer":"国民主権"},
+    {"id":"soc-004","subject":"social","question":"日本海側で冬に雪が多く降る主な理由として正しいものはどれですか。","choices":["季節風が日本海で水蒸気を含むから","太平洋から暖かい風が吹くから","一年中高気圧に覆われるから","赤道に近いから"],"answer":"季節風が日本海で水蒸気を含むから"},
+    {"id":"soc-005","subject":"social","question":"大日本帝国憲法が発布された年は何年ですか。","choices":["1868年","1889年","1894年","1946年"],"answer":"1889年"}
+  ]
+}
