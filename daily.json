@@ -1,16 +1,16 @@
 {
-  "date": "2026-09-14",
-  "title": "高校入試 日替わり問題 2026-09-14",
+  "date": "2026-09-15",
+  "title": "高校入試 日替わり問題 2026-09-15",
   "questions": [
-    {"id":"eng-001","subject":"english","question":"I have lived in Tokyo ( ) 2018.","choices":["for","since","during","from"],"answer":"since"},
-    {"id":"eng-002","subject":"english","question":"My brother ( ) soccer every Sunday.","choices":["play","plays","played","playing"],"answer":"plays"},
-    {"id":"eng-003","subject":"english","question":"I went to the library ( ) a book.","choices":["borrow","borrowing","to borrow","borrowed"],"answer":"to borrow"},
-    {"id":"eng-004","subject":"english","question":"This book is ( ) than that one.","choices":["interesting","more interesting","most interesting","interest"],"answer":"more interesting"},
-    {"id":"eng-005","subject":"english","question":"English ( ) in many countries.","choices":["speaks","is spoken","spoke","speaking"],"answer":"is spoken"},
-    {"id":"soc-001","subject":"social","question":"日本で面積が最も大きい都道府県はどこですか。","choices":["北海道","岩手県","福島県","長野県"],"answer":"北海道"},
-    {"id":"soc-002","subject":"social","question":"江戸幕府を開いた人物は誰ですか。","choices":["織田信長","豊臣秀吉","徳川家康","徳川吉宗"],"answer":"徳川家康"},
-    {"id":"soc-003","subject":"social","question":"日本国憲法で、国の政治のあり方を最終的に決める権利が国民にあることを何といいますか。","choices":["基本的人権","国民主権","平和主義","三権分立"],"answer":"国民主権"},
-    {"id":"soc-004","subject":"social","question":"日本海側で冬に雪が多く降る主な理由として正しいものはどれですか。","choices":["季節風が日本海で水蒸気を含むから","太平洋から暖かい風が吹くから","一年中高気圧に覆われるから","赤道に近いから"],"answer":"季節風が日本海で水蒸気を含むから"},
-    {"id":"soc-005","subject":"social","question":"大日本帝国憲法が発布された年は何年ですか。","choices":["1868年","1889年","1894年","1946年"],"answer":"1889年"}
+    {"id":"eng-007","subject":"english","question":"This is the book ( ) my teacher recommended.","choices":["who","which","where","when"],"answer":"which"},
+    {"id":"eng-021","subject":"english","question":"If it ( ) tomorrow, we will practice inside.","choices":["rains","rained","will rain","rain"],"answer":"rains"},
+    {"id":"eng-020","subject":"english","question":"A: The room is a little dark.  B: I'll open the curtains. What did B understand?","choices":["A wants more light","A wants to sleep","A is cold","A will leave"],"answer":"A wants more light"},
+    {"id":"eng-015","subject":"english","question":"A museum opens at 9:30 and closes at 17:00. Ken arrives at 16:40. How long can he stay?","choices":["10 minutes","20 minutes","30 minutes","40 minutes"],"answer":"20 minutes"},
+    {"id":"eng-019","subject":"english","question":"Rina studied abroad and learned that mistakes helped her speak more. What did she learn?","choices":["Trying is important","Silence is best","Grammar is unnecessary","Travel is easy"],"answer":"Trying is important"},
+    {"id":"soc-009","subject":"social","question":"昼間人口が夜間人口より大幅に多い都市で考えられる特徴はどれですか。","choices":["通勤者が多く流入する","農業人口だけが多い","人口移動がない","住宅だけが集中する"],"answer":"通勤者が多く流入する"},
+    {"id":"soc-013","subject":"social","question":"明治政府が富国強兵を進めるために行った政策の組合せとして適切なのはどれですか。","choices":["徴兵令と殖産興業","参勤交代と鎖国","班田収授と遣唐使","刀狩と楽市楽座"],"answer":"徴兵令と殖産興業"},
+    {"id":"soc-015","subject":"social","question":"日本国憲法が施行された年は何年ですか。","choices":["1945年","1946年","1947年","1951年"],"answer":"1947年"},
+    {"id":"soc-016","subject":"social","question":"円安が進んだとき一般に起こりやすいことはどれですか。","choices":["輸入品の円価格が上がりやすい","輸入品が必ず安くなる","海外旅行費が必ず下がる","為替の影響がなくなる"],"answer":"輸入品の円価格が上がりやすい"},
+    {"id":"soc-018","subject":"social","question":"資料で高齢化率上昇と医療費増加が同時に見られるとき、考察として最も適切なのはどれですか。","choices":["人口構成と社会保障費を関連づける","医療費だけを見て人口を無視する","一つの年だけで結論を出す","資料以外の根拠を一切使わない"],"answer":"人口構成と社会保障費を関連づける"}
   ]
 }
