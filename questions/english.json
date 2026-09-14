@@ -1,0 +1,4 @@
+[
+  {"id":"eng-101","subject":"english","category":"現在完了","prediction_weight":4,"question":"I have lived here ( ) 2020.","choices":["for","since","from","during"],"answer":"since"},
+  {"id":"eng-102","subject":"english","category":"比較","prediction_weight":3,"question":"This river is ( ) than that one.","choices":["long","longer","longest","the long"],"answer":"longer"}
+]
