@@ -1,16 +1,16 @@
 {
-  "date": "2026-09-15",
-  "title": "高校入試 日替わり問題 2026-09-15",
+  "date": "2026-09-16",
+  "title": "高校入試 日替わり問題 2026-09-16",
   "questions": [
-    {"id":"eng-007","subject":"english","question":"This is the book ( ) my teacher recommended.","choices":["who","which","where","when"],"answer":"which"},
-    {"id":"eng-021","subject":"english","question":"If it ( ) tomorrow, we will practice inside.","choices":["rains","rained","will rain","rain"],"answer":"rains"},
-    {"id":"eng-020","subject":"english","question":"A: The room is a little dark.  B: I'll open the curtains. What did B understand?","choices":["A wants more light","A wants to sleep","A is cold","A will leave"],"answer":"A wants more light"},
-    {"id":"eng-015","subject":"english","question":"A museum opens at 9:30 and closes at 17:00. Ken arrives at 16:40. How long can he stay?","choices":["10 minutes","20 minutes","30 minutes","40 minutes"],"answer":"20 minutes"},
-    {"id":"eng-019","subject":"english","question":"Rina studied abroad and learned that mistakes helped her speak more. What did she learn?","choices":["Trying is important","Silence is best","Grammar is unnecessary","Travel is easy"],"answer":"Trying is important"},
-    {"id":"soc-009","subject":"social","question":"昼間人口が夜間人口より大幅に多い都市で考えられる特徴はどれですか。","choices":["通勤者が多く流入する","農業人口だけが多い","人口移動がない","住宅だけが集中する"],"answer":"通勤者が多く流入する"},
-    {"id":"soc-013","subject":"social","question":"明治政府が富国強兵を進めるために行った政策の組合せとして適切なのはどれですか。","choices":["徴兵令と殖産興業","参勤交代と鎖国","班田収授と遣唐使","刀狩と楽市楽座"],"answer":"徴兵令と殖産興業"},
-    {"id":"soc-015","subject":"social","question":"日本国憲法が施行された年は何年ですか。","choices":["1945年","1946年","1947年","1951年"],"answer":"1947年"},
-    {"id":"soc-016","subject":"social","question":"円安が進んだとき一般に起こりやすいことはどれですか。","choices":["輸入品の円価格が上がりやすい","輸入品が必ず安くなる","海外旅行費が必ず下がる","為替の影響がなくなる"],"answer":"輸入品の円価格が上がりやすい"},
-    {"id":"soc-018","subject":"social","question":"資料で高齢化率上昇と医療費増加が同時に見られるとき、考察として最も適切なのはどれですか。","choices":["人口構成と社会保障費を関連づける","医療費だけを見て人口を無視する","一つの年だけで結論を出す","資料以外の根拠を一切使わない"],"answer":"人口構成と社会保障費を関連づける"}
+    {"id":"eng-006","subject":"english","question":"Have you ever ( ) Kyoto in spring?","choices":["visit","visited","visiting","visits"],"answer":"visited"},
+    {"id":"eng-013","subject":"english","question":"Choose the best sentence.","choices":["I don't know where he lives.","I don't know where does he live.","I don't know where he live.","I don't know he where lives."],"answer":"I don't know where he lives."},
+    {"id":"eng-016","subject":"english","question":"Mika uses a bottle many times instead of buying a new one. What is her main purpose?","choices":["To reduce waste","To buy more drinks","To make bottles heavier","To use more plastic"],"answer":"To reduce waste"},
+    {"id":"eng-018","subject":"english","question":"Club A meets Tue/Thu. Club B meets Wed/Fri. Sota is free only Tue/Fri. Which club can he join?","choices":["Only A","Only B","Both","Neither"],"answer":"Both"},
+    {"id":"eng-024","subject":"english","question":"Which sentence best invites a friend to an event?","choices":["Would you like to come with me?","You came yesterday.","I can event.","Do you liked it?"],"answer":"Would you like to come with me?"},
+    {"id":"soc-006","subject":"social","question":"過疎化が進む地域で起こりやすい課題はどれですか。","choices":["公共交通の維持が難しくなる","人口密度が急上昇する","住宅不足が必ず起こる","耕地がすべて工業地になる"],"answer":"公共交通の維持が難しくなる"},
+    {"id":"soc-008","subject":"social","question":"工場が港の近くに立地する利点として適切なのはどれですか。","choices":["原料の輸入や製品輸送に便利","必ず気温が低い","農地が増える","人口がゼロになる"],"answer":"原料の輸入や製品輸送に便利"},
+    {"id":"soc-011","subject":"social","question":"鎌倉幕府が御家人に与えた恩恵と奉公の関係を何といいますか。","choices":["御恩と奉公","班田収授","参勤交代","殖産興業"],"answer":"御恩と奉公"},
+    {"id":"soc-014","subject":"social","question":"自由民権運動が求めたものとして最も適切なのはどれですか。","choices":["国会の開設","鎖国の強化","武士の特権復活","幕府の再興"],"answer":"国会の開設"},
+    {"id":"soc-017","subject":"social","question":"SNSの情報を利用するとき最も重要な姿勢はどれですか。","choices":["複数の情報源で確かめる","最初の投稿だけ信じる","拡散数だけで判断する","発信者を確認しない"],"answer":"複数の情報源で確かめる"}
   ]
 }
