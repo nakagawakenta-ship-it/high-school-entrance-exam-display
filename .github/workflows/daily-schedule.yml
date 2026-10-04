@@ -2,11 +2,17 @@ name: Daily e-paper schedule
 
 on:
   schedule:
-    - cron: '25 20 * * *' # 05:25 JST
+    # Two early JST runs provide retry margin before the ESP32 morning refresh.
+    - cron: '0 19 * * *'   # 04:00 JST
+    - cron: '0 20 * * *'   # 05:00 JST retry
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: daily-epaper
+  cancel-in-progress: false
 
 jobs:
   update:
@@ -14,24 +20,34 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Select today's prepared unique questions
-        run: |
-          TODAY=$(TZ=Asia/Tokyo date +%F)
-          FILE="daily/$TODAY.json"
-          echo "JST date: $TODAY"
-          if [ ! -f "$FILE" ]; then
-            echo "Prepared and reviewed question file not found: $FILE"
-            exit 1
-          fi
-          cp "$FILE" daily.json
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
-      - name: Install dependencies
+      - name: Generate today's balanced duplicate-checked questions
+        run: python scripts/generate_daily_questions.py
+
+      - name: Validate question set
+        run: |
+          python - <<'PY'
+          import json, datetime, zoneinfo
+          d=json.load(open('daily.json',encoding='utf-8'))
+          today=datetime.datetime.now(zoneinfo.ZoneInfo('Asia/Tokyo')).date().isoformat()
+          assert d['date']==today, (d['date'],today)
+          qs=d['questions']; assert len(qs)==10
+          assert sum(q['subject']=='english' for q in qs)==5
+          assert sum(q['subject']=='social' for q in qs)==5
+          assert len({q['question'] for q in qs})==10
+          for q in qs:
+              assert len(q.get('choices',[]))==4 and q.get('answer') in q['choices']
+          print('Validation OK:',today)
+          PY
+
+      - name: Install display dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y fonts-noto-cjk
@@ -44,6 +60,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add daily.json display.bin display_preview.png
+          git add daily.json daily/ display.bin display_preview.png
           git diff --cached --quiet || git commit -m "Daily e-paper update $(TZ=Asia/Tokyo date +%F)"
+          git pull --rebase origin main
           git push
