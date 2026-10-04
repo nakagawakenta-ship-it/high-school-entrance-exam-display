@@ -2,9 +2,9 @@ name: Daily e-paper schedule
 
 on:
   schedule:
-    # Two early JST runs provide retry margin before the ESP32 morning refresh.
-    - cron: '0 19 * * *'   # 04:00 JST
+    - cron: '0 19 * * *'   # 04:00 JST primary
     - cron: '0 20 * * *'   # 05:00 JST retry
+    - cron: '0 21 * * *'   # 06:00 JST final retry
   workflow_dispatch:
 
 permissions:
@@ -26,10 +26,20 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.13'
 
-      - name: Generate today's balanced duplicate-checked questions
-        run: python scripts/generate_daily_questions.py
+      - name: Select prepared questions first; generate only as fallback
+        run: |
+          TODAY=$(TZ=Asia/Tokyo date +%F)
+          FILE="daily/$TODAY.json"
+          echo "JST date: $TODAY"
+          if [ -f "$FILE" ]; then
+            echo "Using prepared reviewed file: $FILE"
+            cp "$FILE" daily.json
+          else
+            echo "Prepared file missing; using generator fallback"
+            python scripts/generate_daily_questions.py
+          fi
 
       - name: Validate question set
         run: |
