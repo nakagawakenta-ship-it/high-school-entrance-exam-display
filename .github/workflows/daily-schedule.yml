@@ -1,10 +1,8 @@
-name: Daily e-paper schedule
+name: Daily e-paper update
 
 on:
   schedule:
-    - cron: '0 19 * * *'   # 04:00 JST primary
-    - cron: '0 20 * * *'   # 05:00 JST retry
-    - cron: '0 21 * * *'   # 06:00 JST final retry
+    - cron: '30 20 * * *'  # 05:30 JST
   workflow_dispatch:
 
 permissions:
@@ -17,6 +15,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -28,49 +27,52 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Select prepared questions first; generate only as fallback
-        run: |
-          TODAY=$(TZ=Asia/Tokyo date +%F)
-          FILE="daily/$TODAY.json"
-          echo "JST date: $TODAY"
-          if [ -f "$FILE" ]; then
-            echo "Using prepared reviewed file: $FILE"
-            cp "$FILE" daily.json
-          else
-            echo "Prepared file missing; using generator fallback"
-            python scripts/generate_daily_questions.py
-          fi
-
-      - name: Validate question set
-        run: |
-          python - <<'PY'
-          import json, datetime, zoneinfo
-          d=json.load(open('daily.json',encoding='utf-8'))
-          today=datetime.datetime.now(zoneinfo.ZoneInfo('Asia/Tokyo')).date().isoformat()
-          assert d['date']==today, (d['date'],today)
-          qs=d['questions']; assert len(qs)==10
-          assert sum(q['subject']=='english' for q in qs)==5
-          assert sum(q['subject']=='social' for q in qs)==5
-          assert len({q['question'] for q in qs})==10
-          for q in qs:
-              assert len(q.get('choices',[]))==4 and q.get('answer') in q['choices']
-          print('Validation OK:',today)
-          PY
-
-      - name: Install display dependencies
+      - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y fonts-noto-cjk
           python -m pip install pillow
 
-      - name: Generate e-paper files
-        run: python scripts/generate_display.py
+      - name: Generate today's questions
+        run: python scripts/generate_daily_questions.py
 
-      - name: Commit today's files
+      - name: Validate today's data
+        run: |
+          python - <<'PY'
+          import json, datetime, zoneinfo, pathlib
+          today=datetime.datetime.now(zoneinfo.ZoneInfo('Asia/Tokyo')).date().isoformat()
+          d=json.load(open('daily.json',encoding='utf-8'))
+          assert d['date']==today, (d['date'],today)
+          qs=d['questions']
+          assert len(qs)==10
+          assert sum(q['subject']=='english' for q in qs)==5
+          assert sum(q['subject']=='social' for q in qs)==5
+          assert len({q['question'] for q in qs})==10
+          for q in qs:
+              assert len(q.get('choices',[]))==4
+              assert q.get('answer') in q['choices']
+          assert pathlib.Path(f'daily/{today}.json').exists()
+          print('VALIDATED',today)
+          PY
+
+      - name: Generate display
+        run: |
+          python scripts/generate_display.py
+          test "$(stat -c%s display.bin)" -eq 48000
+          echo "DISPLAY_OK 48000 bytes"
+
+      - name: Commit and push atomically
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add daily.json daily/ display.bin display_preview.png
-          git diff --cached --quiet || git commit -m "Daily e-paper update $(TZ=Asia/Tokyo date +%F)"
-          git pull --rebase origin main
-          git push
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git commit -m "Daily e-paper update $(TZ=Asia/Tokyo date +%F)"
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin main && exit 0
+            sleep 10
+          done
+          exit 1
