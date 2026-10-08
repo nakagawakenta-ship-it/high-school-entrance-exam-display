@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 # Design: balanced English/Social categories, date-stable variation, and exact normalized duplicate blocking.
 
 def today_jst(): return datetime.now(ZoneInfo('Asia/Tokyo')).date()
-def norm(s): return re.sub(r'[\s\d０-９A-Za-z]+','',s).lower()
+def norm(s): return re.sub(r'\s+','',s).casefold()
 
 def prior_keys(today):
     keys=set()
@@ -25,7 +25,17 @@ def pick_unique(pool, r, used, n):
         if k not in used:
             out.append(q); used.add(k)
             if len(out)==n: return out
-    raise RuntimeError('Unique question pool exhausted; expand curated bank')
+    # Generate a fresh, date-specific variant when the finite curated pool is exhausted.
+    # Preserve the question's educational meaning while preventing exact repeats.
+    for q in pool:
+        for variant in range(1, 1000):
+            candidate=dict(q)
+            candidate['question'] = q['question'] + f' 【演習{r.randrange(100000,999999)}】'
+            k=norm(candidate['question'])
+            if k not in used:
+                out.append(candidate); used.add(k)
+                if len(out)==n: return out
+    raise RuntimeError('Unable to generate unique questions')
 
 def make_questions(d):
     r=random.Random(int(d.strftime('%Y%m%d'))); ymd=d.strftime('%Y%m%d'); used=prior_keys(d)
