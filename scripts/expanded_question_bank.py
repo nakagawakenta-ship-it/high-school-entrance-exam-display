@@ -49,7 +49,7 @@ def question(kind, r):
         return f'{river}の河口付近の低地で特に注意すべき災害は？',['洪水・高潮','雪崩','砂漠化','火砕流だけ'],'洪水・高潮'
     if kind == 'landform':
         feature,meaning=r.choice([('扇状地','山地から平野に出た川の土砂が扇形に堆積'),('三角州','河口に土砂が堆積'),('リアス海岸','谷が沈水して海岸が入り組む'),('河岸段丘','川沿いに階段状の地形ができる')])
-        return f'「{meaning}」に当たる地形は？',[feature]+[x for x in ['扇状地','三角州','リアス海岸','河岸段丘'] if x!=feature],feature
+        return f'地形の特徴「{meaning}」に当たる名称は？',[feature]+[x for x in ['扇状地','三角州','リアス海岸','河岸段丘'] if x!=feature],feature
     if kind == 'history':
         year,event=r.choice([(1853,'ペリー来航'),(1854,'日米和親条約'),(1867,'大政奉還'),(1871,'廃藩置県'),(1873,'地租改正'),(1889,'大日本帝国憲法発布'),(1925,'普通選挙法')])
         others=[x for x in ['鎌倉幕府成立','日清戦争','日本国憲法施行','大政奉還'] if x!=event][:3]
@@ -59,7 +59,7 @@ def question(kind, r):
         years.sort()
         correct='→'.join(x[1] for x in years)
         wrong=['→'.join(years[i][1] for i in seq) for seq in [(1,0,2),(0,2,1),(2,1,0)]]
-        return '出来事を古い順に並べたものは？',[correct]+wrong,correct
+        return f'次の3件（{", ".join(x[1] for x in years)}）を古い順に並べると？',[correct]+wrong,correct
     if kind == 'civics':
         seats=r.choice([90,120,150,180,210,240])
         votes=seats*2//3
