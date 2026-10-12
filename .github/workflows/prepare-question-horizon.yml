@@ -1,0 +1,30 @@
+name: Prepare exam questions through February 2027
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/prepare_question_horizon.py'
+      - 'scripts/expanded_question_bank.py'
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Generate and validate all future days
+        run: python scripts/prepare_question_horizon.py
+      - name: Commit validated question bank
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add prepared/
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Pre-generate validated questions through February 2027"
+          git pull --rebase origin main
+          git push origin main
