@@ -1,0 +1,23 @@
+name: Exam question horizon audit
+on:
+  schedule:
+    - cron: '10 21 * * *' # 06:10 JST
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Audit all dates to February 2027
+        run: python scripts/audit_question_horizon.py
+      - name: Preserve audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: exam-question-audit
+          path: question_quality_audit.json
