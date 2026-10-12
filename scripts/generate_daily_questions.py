@@ -25,17 +25,8 @@ def pick_unique(pool, r, used, n):
         if k not in used:
             out.append(q); used.add(k)
             if len(out)==n: return out
-    # Generate a fresh, date-specific variant when the finite curated pool is exhausted.
-    # Preserve the question's educational meaning while preventing exact repeats.
-    for q in pool:
-        for variant in range(1, 1000):
-            candidate=dict(q)
-            candidate['question'] = q['question'] + f' 【演習{r.randrange(100000,999999)}】'
-            k=norm(candidate['question'])
-            if k not in used:
-                out.append(candidate); used.add(k)
-                if len(out)==n: return out
-    raise RuntimeError('Unable to generate unique questions')
+    # Do not relabel previously used questions as new ones.
+    raise RuntimeError('Question bank exhausted: no real new question available')
 
 def make_questions(d):
     r=random.Random(int(d.strftime('%Y%m%d'))); ymd=d.strftime('%Y%m%d'); used=prior_keys(d)
