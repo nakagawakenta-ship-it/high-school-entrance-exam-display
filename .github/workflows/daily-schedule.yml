@@ -34,7 +34,7 @@ jobs:
           python -m pip install pillow
 
       - name: Generate today's questions
-        run: python scripts/generate_daily_questions.py
+        run: python scripts/generate_diverse_daily.py
 
       - name: Validate today's data
         run: |
