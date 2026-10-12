@@ -12,6 +12,9 @@ for p in glob.glob('daily/*.json'):
             seen.add(re.sub(r'\s+','',q['question']).casefold())
     except (OSError,ValueError,KeyError):pass
 questions=fresh_questions(d,seen)
+import random
+for i,q in enumerate(questions):
+    random.Random(int(d.strftime('%Y%m%d'))+i*997).shuffle(q['choices'])
 data={'date':d.isoformat(),'title':f'高校入試 今日の問題 {d.isoformat()}','questions':questions}
 os.makedirs('daily',exist_ok=True)
 payload=json.dumps(data,ensure_ascii=False,separators=(',',':'))
