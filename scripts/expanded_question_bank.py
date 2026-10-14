@@ -77,19 +77,38 @@ def question(kind, r):
             ('カルスト地形','石灰岩が雨水などに溶かされてできる')
         ]
         feature,meaning=r.choice(pairs)
-        fmt=r.randrange(3)
+        fmt=r.randrange(5)
         if fmt==0:
             stem=f'地形の特徴「{meaning}」に当たる名称は？'
         elif fmt==1:
-            stem=f'「{feature}」ができる主な原因・特徴として正しいものは？'
+            stem=f'次の説明「{meaning}」に該当する地形はどれ？'
+        elif fmt==2:
+            stem=f'地形図の読解：{meaning}という特徴をもつ地形は？'
+        elif fmt==3:
+            stem=f'河川・海岸などのはたらきで「{meaning}」となった地形は？'
         else:
-            stem=f'地形図で「{meaning}」に当たる地形を選ぶと？'
+            stem=f'日本の地形を学ぶ問題です。「{meaning}」に当たるものは？'
         options=[feature]+[x[0] for x in r.sample([x for x in pairs if x[0]!=feature],3)]
         return stem,options,feature
     if kind == 'history':
-        year,event=r.choice([(1853,'ペリー来航'),(1854,'日米和親条約'),(1867,'大政奉還'),(1871,'廃藩置県'),(1873,'地租改正'),(1889,'大日本帝国憲法発布'),(1925,'普通選挙法')])
-        others=[x for x in ['鎌倉幕府成立','日清戦争','日本国憲法施行','大政奉還'] if x!=event][:3]
-        return f'{year}年の出来事として正しいものは？',[event]+others,event
+        events=[
+            (645,'大化の改新'),(710,'平城京遷都'),(794,'平安京遷都'),(894,'遣唐使の停止'),
+            (1185,'壇ノ浦の戦い'),(1192,'源頼朝が征夷大将軍に任命'),(1274,'文永の役'),
+            (1333,'鎌倉幕府滅亡'),(1338,'足利尊氏が征夷大将軍に任命'),(1467,'応仁の乱'),
+            (1543,'鉄砲伝来'),(1549,'キリスト教伝来'),(1600,'関ヶ原の戦い'),(1603,'江戸幕府成立'),
+            (1639,'ポルトガル船来航禁止'),(1853,'ペリー来航'),(1854,'日米和親条約'),
+            (1867,'大政奉還'),(1868,'明治維新'),(1871,'廃藩置県'),(1873,'地租改正'),
+            (1889,'大日本帝国憲法発布'),(1894,'日清戦争開始'),(1904,'日露戦争開始'),
+            (1914,'第一次世界大戦開始'),(1925,'普通選挙法成立'),(1931,'満州事変'),
+            (1937,'日中戦争開始'),(1941,'太平洋戦争開始'),(1945,'第二次世界大戦終結'),
+            (1946,'日本国憲法公布'),(1947,'日本国憲法施行'),(1951,'サンフランシスコ平和条約調印'),
+            (1964,'東京オリンピック開催'),(1972,'沖縄返還'),(1973,'石油危機'),
+            (1989,'消費税導入'),(1995,'阪神・淡路大震災'),(2011,'東日本大震災')
+        ]
+        year,event=r.choice(events)
+        stem=r.choice([f'{year}年の出来事として正しいものは？',f'次のうち、{year}年に起きた出来事は？'])
+        distractors=[x[1] for x in r.sample([x for x in events if x[1]!=event],3)]
+        return stem,[event]+distractors,event
     if kind == 'chronology':
         years=r.sample([(1853,'ペリー来航'),(1867,'大政奉還'),(1871,'廃藩置県'),(1889,'大日本帝国憲法発布'),(1925,'普通選挙法')],3)
         years.sort()
@@ -97,9 +116,11 @@ def question(kind, r):
         wrong=['→'.join(years[i][1] for i in seq) for seq in [(1,0,2),(0,2,1),(2,1,0)]]
         return f'次の3件（{", ".join(x[1] for x in years)}）を古い順に並べると？',[correct]+wrong,correct
     if kind == 'civics':
-        seats=r.choice([90,120,150,180,210,240])
+        seats=r.randrange(60,301,10)
         votes=seats*2//3
-        return f'衆議院の出席議員{seats}人。法律案再可決に必要な賛成の最少数は？',[str(votes),str(seats//2),str(seats//3),str(seats-1)],str(votes)
+        stem=r.choice([f'衆議院の出席議員{seats}人。法律案再可決に必要な賛成の最少数は？',f'出席議員が{seats}人の衆議院で、法律案を再可決するには最低何人の賛成が必要？'])
+        options=[str(votes),str(seats//2),str(seats//3),str(seats-1)]
+        return stem,options,str(votes)
     if kind == 'population':
         young=r.randrange(9,19); old=r.randrange(22,38); work=100-young-old
         return f'人口構成：15歳未満{young}％、15～64歳{work}％、65歳以上{old}％。最大の層は？',['15～64歳','15歳未満','65歳以上','すべて同じ'],'15～64歳'
