@@ -99,7 +99,7 @@ def question(kind, r):
             ('カルスト地形','石灰岩が雨水などに溶かされてできる')
         ]
         feature,meaning=r.choice(pairs)
-        fmt=r.randrange(8)
+        fmt=r.randrange(10)
         if fmt==0:
             stem=f'地形の特徴「{meaning}」に当たる名称は？'
         elif fmt==1:
@@ -114,6 +114,10 @@ def question(kind, r):
             stem=f'「{meaning}」という説明に最もよく当てはまる地形を選びなさい。'
         elif fmt==6:
             stem=f'地形の成り立ちを説明した文「{meaning}」に合う用語は？'
+        elif fmt==7:
+            stem=f'地形の特徴を表す資料「{meaning}」から判断できる地形名は？'
+        elif fmt==8:
+            stem=f'日本の地理に関する問いです。「{meaning}」を表す地形用語は？'
         else:
             stem=f'地形の分類問題：特徴が「{meaning}」であるものはどれ？'
         options=[feature]+[x[0] for x in r.sample([x for x in pairs if x[0]!=feature],3)]
