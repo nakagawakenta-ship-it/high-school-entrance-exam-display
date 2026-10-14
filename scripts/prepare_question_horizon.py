@@ -3,7 +3,7 @@ from datetime import date,timedelta
 from pathlib import Path
 sys.path.insert(0,'scripts')
 from expanded_question_bank import fresh_questions
-start=date(2026,10,14)
+start=date(2026,10,16)
 end=date(2027,2,28)
 seen=set()
 for p in glob.glob('daily/*.json'):
@@ -28,4 +28,4 @@ while d<=end:
     Path('prepared',d.isoformat()+'.json').write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     count+=10
     d+=timedelta(days=1)
-print('PREPARED',count,'questions; 138 days')
+print('PREPARED',count,'questions through',end.isoformat())
