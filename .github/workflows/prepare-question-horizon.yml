@@ -5,6 +5,7 @@ on:
     paths:
       - 'scripts/prepare_question_horizon.py'
       - 'scripts/expanded_question_bank.py'
+      - '.github/workflows/prepare-question-horizon.yml'
 permissions:
   contents: write
 jobs:
