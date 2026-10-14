@@ -117,7 +117,7 @@ def question(kind, r):
         return f'次の3件（{", ".join(x[1] for x in years)}）を古い順に並べると？',[correct]+wrong,correct
     if kind == 'civics':
         seats=r.randrange(60,301,10)
-        votes=seats*2//3
+        votes=(2*seats+2)//3
         stem=r.choice([f'衆議院の出席議員{seats}人。法律案再可決に必要な賛成の最少数は？',f'出席議員が{seats}人の衆議院で、法律案を再可決するには最低何人の賛成が必要？'])
         options=[str(votes),str(seats//2),str(seats//3),str(seats-1)]
         return stem,options,str(votes)
