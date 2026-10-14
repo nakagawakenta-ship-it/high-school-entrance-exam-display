@@ -1,5 +1,10 @@
 name: Exam question horizon audit
 on:
+  push:
+    paths:
+      - 'scripts/audit_question_horizon.py'
+      - 'scripts/expanded_question_bank.py'
+      - '.github/workflows/question-quality-audit.yml'
   schedule:
     - cron: '10 21 * * *' # 06:10 JST
   workflow_dispatch:
