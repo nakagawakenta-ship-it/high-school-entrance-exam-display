@@ -11,14 +11,23 @@ def question(kind, r):
         x=r.randrange(130,160); y=x+r.randrange(5,25)
         return f'{a} is {x} cm tall; {b} is {y} cm. Who is taller?',[b,a,'Both','Cannot tell'],b
     if kind == 'dialogue':
-        p=r.choice(['station','museum','library','aquarium','hospital','city hall'])
+        places=['station','museum','library','aquarium','hospital','city hall','sports center','post office','park','art museum','bus stop','shopping mall']
+        start,dest=r.sample(places,2)
+        name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana','Sota','Aki'])
         d=r.choice(['turn left','turn right','go straight'])
         good=f'Please {d}.'
-        return f'A: How can I get to the {p}? B: ( )',[good,'I went yesterday.','It is interesting.','I like reading.'],good
+        stem=r.choice([
+            f'A: How can I get from the {start} to the {dest}? B: ( )',
+            f'A: {name} is at the {start}. How can {name} get to the {dest}? B: ( )',
+            f'A: Excuse me. I am at the {start}. How do I get to the {dest}? B: ( )',
+            f'A: Could you tell me the way from the {start} to the {dest}? B: ( )'
+        ])
+        return stem,[good,'I went there last week.','It opens at nine.','I like reading books.'],good
     if kind == 'reading':
-        name=r.choice(['Mika','Ken','Yuta','Hana','Emi'])
-        p,reason=r.choice([('library','study for a test'),('museum','learn history'),('park','join a cleanup'),('station','meet a friend'),('shop','buy a gift')])
-        return f'{name} went to the {p} to {reason}. Why did {name} go there?',[f'To {reason}.','To play tennis.','To cook dinner.','To watch TV.'],f'To {reason}.'
+        name=r.choice(['Mika','Ken','Yuta','Hana','Emi','Rina','Sota','Aki'])
+        p,reason=r.choice([('library','study for a test'),('museum','learn history'),('park','join a cleanup'),('station','meet a friend'),('shop','buy a gift'),('community center','practice music'),('beach','collect trash'),('science museum','see an exhibition'),('bookstore','buy a dictionary'),('gym','play basketball')])
+        stem=r.choice([f'{name} went to the {p} to {reason}. Why did {name} go there?',f'{name} visited the {p} because {name} wanted to {reason}. What was the purpose of the visit?'])
+        return stem,[f'To {reason}.','To play tennis.','To cook dinner.','To watch TV.'],f'To {reason}.'
     if kind == 'schedule':
         start=r.randrange(8*60,10*60,5); gap=r.choice([10,15,20])
         t=[start+i*gap for i in range(4)]; arrive=t[1]+r.randrange(1,gap)
@@ -29,17 +38,20 @@ def question(kind, r):
         total=student+adult*n
         return f'Tickets: student {student} yen, adult {adult} yen. One student and {n} adults: total?',[str(total),str(total-adult),str(total+adult),str(total+student)],str(total)
     if kind == 'relative':
-        name=r.choice(['Ken','Emi','Hana','Rina','Yuta'])
-        job=r.choice(['teacher','doctor','scientist','artist','engineer'])
-        return f'{name} knows a {job} ( ) works in Yokohama.',['who','where','when','whose'],'who'
+        name=r.choice(['Ken','Emi','Hana','Rina','Yuta','Sota','Mika','Aki'])
+        job=r.choice(['teacher','doctor','scientist','artist','engineer','writer','nurse','cook'])
+        city=r.choice(['Yokohama','Kamakura','Fujisawa','Odawara','Kawasaki','Sagamihara','Chigasaki'])
+        return f'{name} knows a {job} ( ) works in {city}.',['who','where','when','whose'],'who'
     if kind == 'passive':
         name=r.choice(['bridge','school','museum','library','station'])
         year=r.randrange(1980,2020)
         return f'The {name} was ( ) in {year}.',['built','build','building','builds'],'built'
     if kind == 'if':
-        event=r.choice(['sports day','picnic','beach cleanup','school trip'])
-        day=r.choice(['Saturday','Sunday','Monday'])
-        return f'If it ( ) on {day}, we will cancel the {event}.',['rains','will rain','rained','raining'],'rains'
+        event=r.choice(['sports day','picnic','beach cleanup','school trip','soccer game','outdoor concert','class trip','tennis match'])
+        day=r.choice(['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'])
+        name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana','Sota','Aki'])
+        stem=r.choice([f'If it ( ) on {day}, we will cancel the {event}.',f'{name} will stay home if it ( ) tomorrow.',f'If it ( ) this weekend, the students will move the {event} indoors.'])
+        return stem,['rains','will rain','rained','raining'],'rains'
     if kind == 'data':
         days=r.sample(['Mon','Tue','Wed','Thu','Fri'],3); nums=r.sample(range(80,240,5),3)
         winner=days[nums.index(max(nums))]
@@ -116,7 +128,7 @@ def question(kind, r):
         wrong=['→'.join(years[i][1] for i in seq) for seq in [(1,0,2),(0,2,1),(2,1,0)]]
         return f'次の3件（{", ".join(x[1] for x in years)}）を古い順に並べると？',[correct]+wrong,correct
     if kind == 'civics':
-        seats=r.randrange(60,301,10)
+        seats=r.randrange(60,601,10)
         votes=(2*seats+2)//3
         stem=r.choice([f'衆議院の出席議員{seats}人。法律案再可決に必要な賛成の最少数は？',f'出席議員が{seats}人の衆議院で、法律案を再可決するには最低何人の賛成が必要？'])
         options=[str(votes),str(seats//2),str(seats//3),str(seats-1)]
@@ -128,9 +140,10 @@ def question(kind, r):
         ex=r.randrange(105,155,5); im=r.randrange(60,100,5)
         return f'輸出指数100→{ex}、輸入指数100→{im}。正しい説明は？',['輸出増・輸入減','両方増加','輸出減・輸入増','両方減少'],'輸出増・輸入減'
     if kind == 'exchange':
-        a=r.choice([110,120,125,130,135,140,145,150,155,160,165,170])
-        b=a-r.choice([5,10,15,20,25])
-        return f'為替が1ドル{a}円から{b}円に変化した。これは？',['円高・ドル安','円安・ドル高','変化なし','必ず物価が2倍'],'円高・ドル安'
+        a=r.choice(list(range(100,181,5)))
+        b=a-r.choice([5,10,15,20,25,30])
+        stem=r.choice([f'為替が1ドル{a}円から{b}円に変化した。これは？',f'1ドルあたり{a}円だった為替相場が{b}円になった。この変化を何という？'])
+        return stem,['円高・ドル安','円安・ドル高','変化なし','必ず物価が2倍'],'円高・ドル安'
     if kind == 'disaster':
         area=r.choice(['相模川沿い','酒匂川沿い','境川沿い','鶴見川沿い','多摩川沿い','海岸近く','急傾斜地の近く','山間部'])
         weather=r.choice(['台風','大雨','長雨','線状降水帯による豪雨','大雨と満潮'])
