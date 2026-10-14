@@ -1,6 +1,11 @@
 name: Daily e-paper update
 
 on:
+  push:
+    paths:
+      - 'scripts/generate_diverse_daily.py'
+      - 'scripts/expanded_question_bank.py'
+      - '.github/workflows/daily-schedule.yml'
   schedule:
     - cron: '30 20 * * *'  # 05:30 JST
   workflow_dispatch:
