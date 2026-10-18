@@ -223,7 +223,7 @@ def question(kind, r):
         return stem,['should','would','might','could have'],'should'
     if kind == 'indirect':
         place=r.choice(['the library','the station','the city museum','the nearest bus stop','the post office','the science museum','the city hall','the public pool','the art gallery','the community center','the nearest pharmacy','the bus terminal','the train platform','the school gym','the sports center','the history museum','the concert hall','the information desk','the bookshop','the town office','the nearest bank','the police station','the aquarium','the botanical garden','the shopping center','the local hospital','the ferry port','the language school','the tourist office','the nearest restroom','the main entrance','the conference room','the music room','the swimming pool','the ticket counter','the post office near here','the nearest park','the city library','the train station exit','the meeting room'])
-        return f'Could you tell me ( )?', [f'where {place} is',f'where is {place}',f'where does {place}',f'where {place}'],f'where {place} is'
+        return f'A visitor asks about {place}: Could you tell me ( )?', [f'where {place} is',f'where is {place}',f'where does {place}',f'where {place}'],f'where {place} is'
     if kind == 'superlative':
         names=r.sample(['Ken','Yuta','Mika','Emi','Hana','Sota','Rina','Aki'],3)
         heights=sorted(r.sample(range(145,181,5),3))
@@ -271,7 +271,7 @@ def question(kind, r):
     if kind == 'tax':
         price=r.randrange(500,5001,100); total=price*11//10
         good=f'{total} yen'
-        return f'税抜き{price}円の商品に消費税10％を加えると、税込み価格はいくら？',[good,f'{price}円',f'{price+100}円',f'{total+price}円'],good
+        return f'税抜き{price}円の商品に消費税10％を加えると、税込み価格はいくら？',[good,f'{price}円',f'{price*2}円',f'{total+500}円'],good
     if kind == 'history_person':
         person,event=r.choice([('聖徳太子','十七条の憲法'),('源頼朝','鎌倉幕府を開いた'),('織田信長','楽市・楽座を進めた'),('伊藤博文','初代内閣総理大臣'),('福沢諭吉','『学問のすゝめ』を著した'),('板垣退助','自由民権運動を進めた'),('ペリー','黒船で来航した')])
         stem=r.choice([f'{person}の業績として正しいものはどれ？',f'歴史上の人物{person}について、正しい説明を選びなさい。',f'{person}と関係の深い出来事・業績はどれ？',f'日本史の人物{person}に関する説明として適切なものは？',f'{person}についての記述で正しいものを選びなさい。',f'次のうち、{person}が行ったことはどれ？',f'{person}に関連する歴史的な事柄はどれ？',f'歴史資料に登場する{person}について答えなさい。',f'{person}の活動を説明したものとして最も適切なのは？',f'人物と業績の組み合わせとして、{person}に当てはまるものは？'])
