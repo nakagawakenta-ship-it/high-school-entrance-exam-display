@@ -236,19 +236,21 @@ def question(kind, r):
         ])
         return stem,[answer]+wrong,answer
     if kind == 'world_region':
-        country,feature=r.choice([('Brazil','the Amazon rainforest'),('Egypt','the Nile River'),('Australia','the Great Barrier Reef'),('India','the monsoon climate'),('Canada','a large area of boreal forest'),('Saudi Arabia','a hot, dry desert climate')])
-        return f'{country}と関連が深い地理的特徴はどれ？',[feature,'国土全体が永久凍土に覆われる','季節による気候の変化がない','国土全体が南極海にある'],feature
+        country,feature=r.choice([('Brazil','アマゾン川流域の熱帯雨林'),('Egypt','ナイル川'),('Australia','グレートバリアリーフ'),('India','モンスーンの影響を受ける気候'),('Canada','広い針葉樹林帯'),('Saudi Arabia','高温で乾燥した砂漠気候')])
+        stem=r.choice([f'{country}と関連が深い地理的特徴はどれ？',f'世界地理の資料にある{country}の特徴として正しいものは？',f'{country}の自然環境を説明したものはどれ？',f'{country}について、自然や気候の特徴として適切なものは？',f'次のうち{country}に結びつく地理的特色はどれ？',f'{country}の地理に関する説明として正しいものを選びなさい。',f'{country}で見られる自然環境として最も適切なものは？'])
+        return stem,[feature,'国土全体が永久凍土に覆われる','季節による気候の変化がない','国土全体が南極海にある'],feature
     if kind == 'map_scale':
-        cm=r.choice([2,3,4,5,6]); km=cm/2
+        cm=r.randrange(1,21); km=cm/2
         good=f'{km:g} km'
         return f'縮尺1:50,000の地図で2地点が{cm}cm離れている。実際の距離は？',[good,f'{cm*5:g} km',f'{cm/5:g} km',f'{cm*50:g} km'],good
     if kind == 'population_change':
-        total=r.choice([800,1000,1200,1600,2000]); group=total//4
+        total=r.randrange(800,3001,20); group=total//4
         pct=25
         return f'人口{total}人の町で15歳未満が{group}人いる。15歳未満の割合は？',[f'{pct}%',f'{pct*2}%',f'{pct/2:g}%',f'{100-pct}%'],f'{pct}%'
     if kind == 'industry':
         region,industry=r.choice([('中京工業地帯','自動車工業'),('京浜工業地帯','機械・化学工業'),('京葉工業地域','石油化学工業'),('瀬戸内工業地域','造船・石油化学工業'),('北九州工業地域','かつての製鉄業')])
-        return f'{region}と関連が深い工業はどれ？',[industry,'大規模な茶の栽培','寒冷地での小麦栽培','絹織物だけの生産'],industry
+        stem=r.choice([f'{region}と関連が深い工業はどれ？',f'工業地域の特色として、{region}に当てはまるものは？',f'{region}の工業について正しい説明はどれ？',f'日本の工業地帯・地域を学ぶ問題です。{region}と結びつく工業は？',f'{region}で発達した工業の特徴を選びなさい。',f'次のうち{region}を代表する工業はどれ？',f'{region}についての説明として最も適切なものは？',f'地理資料から判断すると、{region}と関連する産業はどれ？'])
+        return stem,[industry,'大規模な茶の栽培','寒冷地での小麦栽培','絹織物だけの生産'],industry
     if kind == 'constitution':
         stem,answer,wrong=r.choice([
             ('日本国憲法で、思想・良心の自由に関係する権利は？','精神の自由',['経済の自由','社会権','参政権']),
@@ -256,18 +258,20 @@ def question(kind, r):
             ('選挙で代表者を選ぶことに関係する権利は？','参政権',['環境権','自由権','請求権']),
             ('裁判を受ける権利などに関係する分類は？','請求権',['社会権','参政権','環境権'])
         ])
-        return stem,[answer]+wrong,answer
+        frame=r.choice(['公民の知識をもとに答えなさい。','日本国憲法に関する問いです。','権利の分類について、次の問いに答えなさい。','憲法と人権について正しいものを選びなさい。','公民分野の資料を読んで答えなさい。','日本の政治と人権に関する問題です。','次の説明に当てはまる権利を選びなさい。','憲法上の権利について、最も適切なものは？','社会の授業で学ぶ権利の分類に関する問いです。','人権の保障に関して、正しい答えを選びなさい。'])
+        return frame+' '+stem,[answer]+wrong,answer
     if kind == 'election':
         voters=r.choice([500,800,1000,1200,2000]); cast=voters*3//5
         good='60%'
         return f'有権者{voters}人のうち{cast}人が投票した。投票率は何％？',[good,'40%','75%','80%'],good
     if kind == 'tax':
-        price=r.choice([500,800,1000,1200,1500,2000]); total=price*11//10
+        price=r.randrange(500,5001,100); total=price*11//10
         good=f'{total} yen'
         return f'税抜き{price}円の商品に消費税10％を加えると、税込み価格はいくら？',[good,f'{price}円',f'{price+100}円',f'{total+price}円'],good
     if kind == 'history_person':
         person,event=r.choice([('聖徳太子','十七条の憲法'),('源頼朝','鎌倉幕府を開いた'),('織田信長','楽市・楽座を進めた'),('伊藤博文','初代内閣総理大臣'),('福沢諭吉','『学問のすゝめ』を著した'),('板垣退助','自由民権運動を進めた'),('ペリー','黒船で来航した')])
-        return f'{person}の業績として正しいものはどれ？',[event,'大日本帝国憲法を廃止した','元寇を指揮した','1192年に最初の幕府を開いた'],event
+        stem=r.choice([f'{person}の業績として正しいものはどれ？',f'歴史上の人物{person}について、正しい説明を選びなさい。',f'{person}と関係の深い出来事・業績はどれ？',f'日本史の人物{person}に関する説明として適切なものは？',f'{person}についての記述で正しいものを選びなさい。',f'次のうち、{person}が行ったことはどれ？',f'{person}に関連する歴史的な事柄はどれ？',f'歴史資料に登場する{person}について答えなさい。',f'{person}の活動を説明したものとして最も適切なのは？',f'人物と業績の組み合わせとして、{person}に当てはまるものは？'])
+        return stem,[event,'大日本帝国憲法を廃止した','元寇を指揮した','1192年に最初の幕府を開いた'],event
     if kind == 'map_direction':
         stem,answer,wrong=r.choice([
             ('地図で、北を上にしたとき東はどの方向？','右',['左','上','下']),
@@ -275,14 +279,16 @@ def question(kind, r):
             ('地図上で西はどちらの方向？','左',['右','上','下']),
             ('北を上にした地図で、南東はどの方向？','右下',['左下','右上','左上'])
         ])
-        return stem,[answer]+wrong,answer
+        frame=r.choice(['地図の方位について答えなさい。','地図の読み取りに関する問いです。','方位を正しく理解して答えなさい。','地理の基礎知識として正しいものは？','次の地図上の移動について答えなさい。','方角の表し方に関する問題です。','地図を北が上になるように見た場合を考えなさい。','地理資料の方位について、適切な答えを選びなさい。','地図上の位置関係について答えなさい。','方位と移動の関係を確認しましょう。'])
+        return frame+' '+stem,[answer]+wrong,answer
     if kind == 'energy':
         stem,answer,wrong=r.choice([
             ('日本でエネルギーの安定供給が課題となる理由は？','化石燃料の多くを輸入に頼るため',['国内に石油が無限にあるため','電力を一切使わないため','再生可能エネルギーが存在しないため']),
             ('再生可能エネルギーに当てはまるものは？','太陽光発電',['石炭火力発電','石油火力発電','天然ガス火力発電']),
             ('省エネルギーの取り組みとして適切なものは？','使わない照明を消す',['冷暖房を窓を開けたまま最大にする','使わない機器を常に動かす','必要以上に車を使う'])
         ])
-        return stem,[answer]+wrong,answer
+        frame=r.choice(['環境と資源について答えなさい。','エネルギー問題に関する問いです。','次の説明として正しいものを選びなさい。','資源の利用について、適切な答えはどれ？','日本のエネルギー事情について答えなさい。','環境保全の視点から考えましょう。','社会とエネルギーに関する問題です。','資料をもとにエネルギーの特徴を判断しなさい。','資源・環境分野の問いに答えなさい。','エネルギーの生産と利用に関する問いです。','持続可能な社会について、正しいものは？','次のうち、エネルギー政策に関する説明はどれ？','環境負荷を減らす方法として適切なものは？','日本の資源と電力について、正しいものを選びなさい。','エネルギーの安定利用を考える問題です。'])
+        return frame+' '+stem,[answer]+wrong,answer
 
     raise ValueError(kind)
 
