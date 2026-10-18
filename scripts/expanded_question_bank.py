@@ -201,28 +201,31 @@ def question(kind, r):
         return stem,opts,answer
     if kind == 'word_order':
         name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana'])
-        obj=r.choice(['English','science','history','math'])
+        obj=r.choice(['English','science','history','math','music','sports','art','geography'])
         correct=f'{name} is interested in {obj}.'
-        return f'Choose the correctly ordered sentence: {name} / interested / is / in / {obj}.',[correct,f'{name} interested is in {obj}.',f'Is {name} in interested {obj}.',f'{name} is in {obj} interested.'],correct
+        stem=r.choice([f'Choose the correctly ordered sentence: {name} / interested / is / in / {obj}.',f'Put the words in the correct order to make a sentence: {name} / is / in / interested / {obj}.'])
+        return stem,[correct,f'{name} interested is in {obj}.',f'Is {name} in interested {obj}.',f'{name} is in {obj} interested.'],correct
     if kind == 'infinitive':
-        name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana'])
-        place,verb=r.choice([('the museum','visit'),('English','study'),('a letter','write'),('a cake','make'),('the guitar','play')])
+        name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana','Sota','Aki'])
+        place,verb=r.choice([('the museum','visit'),('English','study'),('a letter','write'),('a cake','make'),('the guitar','play'),('a new song','sing'),('the park','visit'),('dinner','cook')])
         return f'{name} wants ( ) {place}.',['to '+verb,verb,verb+'ing',verb+'ed'],'to '+verb
     if kind == 'pronoun':
         name,answer=r.choice([('Tom','him'),('Yuki','her'),('the children','them'),('my brother','him'),('my sister','her')])
         return f'I gave the present to {name}. I gave it to ( ).',[answer,'he' if answer=='him' else 'she' if answer=='her' else 'they','his','themselves'],answer
     if kind == 'preposition':
-        place=r.choice(['the station','the library','the airport','school','the museum'])
-        time=r.choice(['at eight','in the morning','on Monday','at noon'])
-        return f'We arrived ( ) {place} {time}.',['at','in','on','for'],'at'
+        place=r.choice(['the station','the library','the airport','school','the museum','the hospital','the park','the city hall'])
+        time=r.choice(['at eight','in the morning','on Monday','at noon','last night','at six thirty','on Friday','in the afternoon'])
+        stem=r.choice([f'We arrived ( ) {place} {time}.',f'They arrived ( ) {place} {time}.'])
+        return stem,['at','in','on','for'],'at'
     if kind == 'modal':
         action=r.choice(['wear a helmet','follow the rules','be quiet in the library','help people in need','keep the room clean'])
-        return f'You ( ) {action}. It is the right thing to do.',['should','would','might','could have'],'should'
+        stem=r.choice([f'You ( ) {action}. It is the right thing to do.',f'In this situation, you ( ) {action}.',f'For safety, people ( ) {action}.'])
+        return stem,['should','would','might','could have'],'should'
     if kind == 'indirect':
         place=r.choice(['the library','the station','the city museum','the nearest bus stop','the post office'])
         return f'Could you tell me ( )?', [f'where {place} is',f'where is {place}',f'where does {place}',f'where {place}'],f'where {place} is'
     if kind == 'superlative':
-        names=r.sample(['Ken','Yuta','Mika','Emi','Hana','Sota'],3)
+        names=r.sample(['Ken','Yuta','Mika','Emi','Hana','Sota','Rina','Aki'],3)
         heights=sorted(r.sample(range(145,181,5),3))
         tallest=names[heights.index(max(heights))]
         data=', '.join(f'{n}: {h} cm' for n,h in zip(names,heights))
@@ -234,7 +237,8 @@ def question(kind, r):
             ('A: Would you like some tea? B: ( )','Yes, please.',['I am twelve.','At the station.','It is Monday.']),
             ('A: How was your weekend? B: ( )','It was great.',['At seven o’clock.','I am fine, thank you.','Two kilometers.'])
         ])
-        return stem,[answer]+wrong,answer
+        frame=r.choice(['Choose the most natural response.','Select the best reply for the conversation.','Which response fits the situation?','Choose the appropriate answer for B.','What should B say next?','Pick the most suitable reply.','Which sentence completes the dialogue naturally?','Choose the best response in this conversation.','What is the most appropriate thing for B to say?','Select the reply that matches A’s words.','Which answer makes the conversation natural?','Complete the short dialogue with the best response.'])
+        return frame+' '+stem,[answer]+wrong,answer
     if kind == 'world_region':
         country,feature=r.choice([('Brazil','アマゾン川流域の熱帯雨林'),('Egypt','ナイル川'),('Australia','グレートバリアリーフ'),('India','モンスーンの影響を受ける気候'),('Canada','広い針葉樹林帯'),('Saudi Arabia','高温で乾燥した砂漠気候')])
         stem=r.choice([f'{country}と関連が深い地理的特徴はどれ？',f'世界地理の資料にある{country}の特徴として正しいものは？',f'{country}の自然環境を説明したものはどれ？',f'{country}について、自然や気候の特徴として適切なものは？',f'次のうち{country}に結びつく地理的特色はどれ？',f'{country}の地理に関する説明として正しいものを選びなさい。',f'{country}で見られる自然環境として最も適切なものは？'])
@@ -261,7 +265,7 @@ def question(kind, r):
         frame=r.choice(['公民の知識をもとに答えなさい。','日本国憲法に関する問いです。','権利の分類について、次の問いに答えなさい。','憲法と人権について正しいものを選びなさい。','公民分野の資料を読んで答えなさい。','日本の政治と人権に関する問題です。','次の説明に当てはまる権利を選びなさい。','憲法上の権利について、最も適切なものは？','社会の授業で学ぶ権利の分類に関する問いです。','人権の保障に関して、正しい答えを選びなさい。'])
         return frame+' '+stem,[answer]+wrong,answer
     if kind == 'election':
-        voters=r.choice([500,800,1000,1200,2000]); cast=voters*3//5
+        voters=r.randrange(500,3001,100); cast=voters*3//5
         good='60%'
         return f'有権者{voters}人のうち{cast}人が投票した。投票率は何％？',[good,'40%','75%','80%'],good
     if kind == 'tax':
