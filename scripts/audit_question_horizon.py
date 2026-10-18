@@ -81,7 +81,7 @@ for q in all_questions:
 result["template_duplicate_groups"] = [v for v in by_template.values() if len(v) > 1]
 result["daily_history_questions_checked"] = len(history_questions)
 
-# Report high textual similarity between different dates within the same topic.
+# Report high textual similarity between different dates within the same topic after checking all daily-history collisions.
 # This is a review signal, not an automatic failure: some skill families naturally share vocabulary.
 seen_pairs = set()
 for i, a in enumerate(all_questions):
