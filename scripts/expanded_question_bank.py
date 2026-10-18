@@ -218,11 +218,11 @@ def question(kind, r):
         stem=r.choice([f'We arrived ( ) {place} {time}.',f'They arrived ( ) {place} {time}.'])
         return stem,['at','in','on','for'],'at'
     if kind == 'modal':
-        action=r.choice(['wear a helmet','follow the rules','be quiet in the library','help people in need','keep the room clean'])
+        action=r.choice(['wear a helmet','follow the rules','be quiet in the library','help people in need','keep the room clean','check the traffic light before crossing','save water when possible','return books on time','listen carefully to others','protect the environment','use a seat belt','wash your hands before eating','tell the truth','keep your password private','recycle paper and cans','take care of public property','arrive on time for class','turn off unused lights','respect different opinions','ask for help when necessary'])
         stem=r.choice([f'You ( ) {action}. It is the right thing to do.',f'In this situation, you ( ) {action}.',f'For safety, people ( ) {action}.'])
         return stem,['should','would','might','could have'],'should'
     if kind == 'indirect':
-        place=r.choice(['the library','the station','the city museum','the nearest bus stop','the post office'])
+        place=r.choice(['the library','the station','the city museum','the nearest bus stop','the post office','the science museum','the city hall','the public pool','the art gallery','the community center','the nearest pharmacy','the bus terminal','the train platform','the school gym','the sports center','the history museum','the concert hall','the information desk','the bookshop','the town office','the nearest bank','the police station','the aquarium','the botanical garden','the shopping center','the local hospital','the ferry port','the language school','the tourist office','the nearest restroom','the main entrance','the conference room','the music room','the swimming pool','the ticket counter','the post office near here','the nearest park','the city library','the train station exit','the meeting room'])
         return f'Could you tell me ( )?', [f'where {place} is',f'where is {place}',f'where does {place}',f'where {place}'],f'where {place} is'
     if kind == 'superlative':
         names=r.sample(['Ken','Yuta','Mika','Emi','Hana','Sota','Rina','Aki'],3)
@@ -244,7 +244,7 @@ def question(kind, r):
         stem=r.choice([f'{country}と関連が深い地理的特徴はどれ？',f'世界地理の資料にある{country}の特徴として正しいものは？',f'{country}の自然環境を説明したものはどれ？',f'{country}について、自然や気候の特徴として適切なものは？',f'次のうち{country}に結びつく地理的特色はどれ？',f'{country}の地理に関する説明として正しいものを選びなさい。',f'{country}で見られる自然環境として最も適切なものは？'])
         return stem,[feature,'国土全体が永久凍土に覆われる','季節による気候の変化がない','国土全体が南極海にある'],feature
     if kind == 'map_scale':
-        cm=r.randrange(1,21); km=cm/2
+        cm=r.randrange(1,101); km=cm/2
         good=f'{km:g} km'
         return f'縮尺1:50,000の地図で2地点が{cm}cm離れている。実際の距離は？',[good,f'{cm*5:g} km',f'{cm/5:g} km',f'{cm*50:g} km'],good
     if kind == 'population_change':
