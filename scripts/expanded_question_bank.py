@@ -198,7 +198,8 @@ def question(kind, r):
             stem=f'{a}, ( ) {b}.'
             answer='so'
         opts=[answer, 'but' if answer.lower()!='but' else 'so', 'unless' if answer.lower()!='unless' else 'because', 'although' if answer.lower()!='although' else 'and']
-        return stem,opts,answer
+        frame=r.choice(['Choose the best conjunction to complete the sentence.','Select the word that best connects the ideas.','Which conjunction makes the sentence natural?','Complete the sentence with the most suitable word.','Choose the correct connecting word.','Read the sentence and select the best answer.','Which word best expresses the relationship between the clauses?','Select the most appropriate conjunction.','Choose the word that completes the sentence logically.','Which option best connects the two parts?','Pick the conjunction that fits the meaning.','Complete the sentence using the correct connector.'])
+        return frame+' '+stem,opts,answer
     if kind == 'word_order':
         name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana'])
         obj=r.choice(['English','science','history','math','music','sports','art','geography'])
