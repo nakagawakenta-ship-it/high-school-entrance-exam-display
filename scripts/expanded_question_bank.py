@@ -175,10 +175,119 @@ def question(kind, r):
     if kind == 'budget':
         a=r.randrange(25,38);b=r.randrange(10,20);c=r.randrange(8,16)
         return f'歳出：社会保障{a}％、教育{b}％、公共事業{c}％。最も大きい項目は？',['社会保障','教育','公共事業','同率'],'社会保障'
+    if kind == 'tense':
+        name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana','Sota','Aki'])
+        activity=r.choice(['the museum','soccer','a letter','dinner','the piano','a book'])
+        time=r.choice(['yesterday','last Sunday','two days ago','last night'])
+        verb={'the museum':'visit','soccer':'play','a letter':'write','dinner':'cook','the piano':'practice','a book':'read'}[activity]
+        past={'visit':'visited','play':'played','write':'wrote','cook':'cooked','practice':'practiced','read':'read'}[verb]
+        return f'{name} ( ) {activity} {time}.',['visits',past,'has visited','visiting'],past
+    if kind == 'conjunction':
+        a,b=r.choice([('It was raining','we stayed home'),('Mika was tired','she went to bed early'),('Ken studied hard','he passed the test'),('The bag was heavy','I carried it carefully')])
+        good=r.choice(['so','because','although','unless'])
+        if good=='because':
+            stem=f'{b.capitalize()} ( ) {a.lower()}.'
+            answer='because'
+        elif good=='although':
+            stem=f'( ) it was difficult, Ken finished the work.'
+            answer='Although'
+        elif good=='unless':
+            stem='You cannot enter ( ) you have a ticket.'
+            answer='unless'
+        else:
+            stem=f'{a}, ( ) {b}.'
+            answer='so'
+        opts=[answer, 'but' if answer.lower()!='but' else 'so', 'unless' if answer.lower()!='unless' else 'because', 'although' if answer.lower()!='although' else 'and']
+        return stem,opts,answer
+    if kind == 'word_order':
+        name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana'])
+        obj=r.choice(['English','science','history','math'])
+        correct=f'{name} is interested in {obj}.'
+        return f'Choose the correctly ordered sentence: {name} / interested / is / in / {obj}.',[correct,f'{name} interested is in {obj}.',f'Is {name} in interested {obj}.',f'{name} is in {obj} interested.'],correct
+    if kind == 'infinitive':
+        name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana'])
+        place,verb=r.choice([('the museum','visit'),('English','study'),('a letter','write'),('a cake','make'),('the guitar','play')])
+        return f'{name} wants ( ) {place}.',['to '+verb,verb,verb+'ing',verb+'ed'],'to '+verb
+    if kind == 'pronoun':
+        name,answer=r.choice([('Tom','him'),('Yuki','her'),('the children','them'),('my brother','him'),('my sister','her')])
+        return f'I gave the present to {name}. I gave it to ( ).',[answer,'he' if answer=='him' else 'she' if answer=='her' else 'they','his','themselves'],answer
+    if kind == 'preposition':
+        place=r.choice(['the station','the library','the airport','school','the museum'])
+        time=r.choice(['at eight','in the morning','on Monday','at noon'])
+        return f'We arrived ( ) {place} {time}.',['at','in','on','for'],'at'
+    if kind == 'modal':
+        action=r.choice(['wear a helmet','follow the rules','be quiet in the library','help people in need','keep the room clean'])
+        return f'You ( ) {action}. It is the right thing to do.',['should','would','might','could have'],'should'
+    if kind == 'indirect':
+        place=r.choice(['the library','the station','the city museum','the nearest bus stop','the post office'])
+        return f'Could you tell me ( )?', [f'where {place} is',f'where is {place}',f'where does {place}',f'where {place}'],f'where {place} is'
+    if kind == 'superlative':
+        names=r.sample(['Ken','Yuta','Mika','Emi','Hana','Sota'],3)
+        heights=sorted(r.sample(range(145,181,5),3))
+        tallest=names[heights.index(max(heights))]
+        data=', '.join(f'{n}: {h} cm' for n,h in zip(names,heights))
+        return f'Heights ({data}). Who is the tallest?',[tallest]+[n for n in names if n!=tallest]+['They are equal'],tallest
+    if kind == 'dialogue_intent':
+        stem,answer,wrong=r.choice([
+            ('A: Thank you for helping me. B: ( )','You are welcome.',['I am sorry.','Here you are.','Good luck yesterday.']),
+            ('A: I am sorry I am late. B: ( )','That is all right.',['You are welcome.','See you tomorrow.','Here is your ticket.']),
+            ('A: Would you like some tea? B: ( )','Yes, please.',['I am twelve.','At the station.','It is Monday.']),
+            ('A: How was your weekend? B: ( )','It was great.',['At seven o’clock.','I am fine, thank you.','Two kilometers.'])
+        ])
+        return stem,[answer]+wrong,answer
+    if kind == 'world_region':
+        country,feature=r.choice([('Brazil','the Amazon rainforest'),('Egypt','the Nile River'),('Australia','the Great Barrier Reef'),('India','the monsoon climate'),('Canada','a large area of boreal forest'),('Saudi Arabia','a hot, dry desert climate')])
+        return f'Which feature is strongly associated with {country}?',[feature,'permafrost across the whole country','a climate with no seasonal change','a country located entirely in the Southern Ocean'],feature
+    if kind == 'map_scale':
+        cm=r.choice([2,3,4,5,6]); km=cm/2
+        good=f'{km:g} km'
+        return f'A map has a scale of 1:50,000. Two points are {cm} cm apart on the map. What is the real distance?',[good,f'{cm*5:g} km',f'{cm/5:g} km',f'{cm*50:g} km'],good
+    if kind == 'population_change':
+        total=r.choice([800,1000,1200,1600,2000]); group=total//4
+        pct=25
+        return f'A town has {total} residents. {group} are under 15. What percentage is under 15?',[f'{pct}%',f'{pct*2}%',f'{pct/2:g}%',f'{100-pct}%'],f'{pct}%'
+    if kind == 'industry':
+        region,industry=r.choice([('中京工業地帯','自動車工業'),('京浜工業地帯','機械・化学工業'),('京葉工業地域','石油化学工業'),('瀬戸内工業地域','造船・石油化学工業'),('北九州工業地域','かつての製鉄業')])
+        return f'Which industry is closely associated with {region}?',[industry,'large-scale tea farming','wheat cultivation in a cold climate','silk production only'],industry
+    if kind == 'constitution':
+        stem,answer,wrong=r.choice([
+            ('日本国憲法で、思想・良心の自由に関係する権利は？','精神の自由',['経済の自由','社会権','参政権']),
+            ('健康で文化的な最低限度の生活を求める権利は？','生存権',['請求権','参政権','財産権']),
+            ('選挙で代表者を選ぶことに関係する権利は？','参政権',['環境権','自由権','請求権']),
+            ('裁判を受ける権利などに関係する分類は？','請求権',['社会権','参政権','環境権'])
+        ])
+        return stem,[answer]+wrong,answer
+    if kind == 'election':
+        voters=r.choice([500,800,1000,1200,2000]); cast=voters*3//5
+        good='60%'
+        return f'In an election, {cast} of {voters} eligible voters cast ballots. What was the turnout?',[good,'40%','75%','80%'],good
+    if kind == 'tax':
+        price=r.choice([500,800,1000,1200,1500,2000]); total=price*11//10
+        good=f'{total} yen'
+        return f'A product costs {price} yen before 10% consumption tax. What is the price including tax?',[good,f'{price} yen',f'{price+100} yen',f'{total+price} yen'],good
+    if kind == 'history_person':
+        person,event=r.choice([('聖徳太子','十七条の憲法'),('源頼朝','鎌倉幕府を開いた'),('織田信長','楽市・楽座を進めた'),('伊藤博文','初代内閣総理大臣'),('福沢諭吉','『学問のすゝめ』を著した'),('板垣退助','自由民権運動を進めた'),('ペリー','黒船で来航した')])
+        return f'Which achievement is associated with {person}?',[event,'the Meiji Constitution was abolished by him','he led the Mongol invasions of Japan','he established the first shogunate in 1192'],event
+    if kind == 'map_direction':
+        stem,answer,wrong=r.choice([
+            ('地図で、北を上にしたとき東はどの方向？','右',['左','上','下']),
+            ('ある地点から北へ進み、その後東へ進んだ。最終地点は出発点からどの方角？','北東',['北西','南東','南西']),
+            ('地図上で西はどちらの方向？','左',['右','上','下']),
+            ('北を上にした地図で、南東はどの方向？','右下',['左下','右上','左上'])
+        ])
+        return stem,[answer]+wrong,answer
+    if kind == 'energy':
+        stem,answer,wrong=r.choice([
+            ('日本でエネルギーの安定供給が課題となる理由は？','化石燃料の多くを輸入に頼るため',['国内に石油が無限にあるため','電力を一切使わないため','再生可能エネルギーが存在しないため']),
+            ('再生可能エネルギーに当てはまるものは？','太陽光発電',['石炭火力発電','石油火力発電','天然ガス火力発電']),
+            ('省エネルギーの取り組みとして適切なものは？','使わない照明を消す',['冷暖房を窓を開けたまま最大にする','使わない機器を常に動かす','必要以上に車を使う'])
+        ])
+        return stem,[answer]+wrong,answer
+
     raise ValueError(kind)
 
-EN=['grammar','comparison','dialogue','reading','schedule','fee','relative','passive','if','data']
-SO=['geography','landform','history','chronology','civics','population','trade','exchange','disaster','budget']
+EN=['grammar','comparison','dialogue','reading','schedule','fee','relative','passive','if','data','tense','conjunction','word_order','infinitive','pronoun','preposition','modal','indirect','superlative','dialogue_intent']
+SO=['geography','landform','history','chronology','civics','population','trade','exchange','disaster','budget','world_region','map_scale','population_change','industry','constitution','election','tax','history_person','map_direction','energy']
 def fresh_questions(date, used):
     seed=int(date.strftime('%Y%m%d')); r=random.Random(seed)
     results=[]
