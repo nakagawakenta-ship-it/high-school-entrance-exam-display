@@ -210,8 +210,10 @@ def question(kind, r):
         place,verb=r.choice([('the museum','visit'),('English','study'),('a letter','write'),('a cake','make'),('the guitar','play'),('a new song','sing'),('the park','visit'),('dinner','cook')])
         return f'{name} wants ( ) {place}.',['to '+verb,verb,verb+'ing',verb+'ed'],'to '+verb
     if kind == 'pronoun':
-        name,answer=r.choice([('Tom','him'),('Yuki','her'),('the children','them'),('my brother','him'),('my sister','her')])
-        return f'I gave the present to {name}. I gave it to ( ).',[answer,'he' if answer=='him' else 'she' if answer=='her' else 'they','his','themselves'],answer
+        name,answer=r.choice([('Tom','him'),('Yuki','her'),('the children','them'),('my brother','him'),('my sister','her'),('Aki','him'),('Mika','her'),('the players','them'),('our teacher','him'),('the visitors','them'),('my aunt','her'),('the students','them')])
+        obj=r.choice(['the present','the book','the message','the tickets','the photos','the invitation','the key','the homework'])
+        stem=r.choice([f'I gave {obj} to {name}. I gave it to ( ).',f'{name} needed {obj}, so I gave it to ( ).',f'I sent {obj} to {name}. I sent it to ( ).'])
+        return stem,[answer,'he' if answer=='him' else 'she' if answer=='her' else 'they','his','themselves'],answer
     if kind == 'preposition':
         place=r.choice(['the station','the library','the airport','school','the museum','the hospital','the park','the city hall'])
         time=r.choice(['at eight','in the morning','on Monday','at noon','last night','at six thirty','on Friday','in the afternoon'])
