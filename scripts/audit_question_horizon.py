@@ -4,7 +4,7 @@ from collections import defaultdict
 from difflib import SequenceMatcher
 from datetime import date
 
-START = date(2026, 10, 16)
+START = date(2026, 10, 20)
 END = date(2027, 2, 28)
 result = {
     "start": START.isoformat(), "end": END.isoformat(),
@@ -23,6 +23,18 @@ def template(text):
     s = re.sub(r"\d+(?:,\d{3})*(?:\.\d+)?", "<n>", s)
     s = re.sub(r"\s+", "", s)
     return s
+
+history_questions = []
+history_keys = defaultdict(list)
+for path in sorted(glob.glob("daily/*.json")):
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        for q in data.get("questions", []):
+            item = {"date": data.get("date", ""), "topic": q.get("topic", "unknown"), "question": q.get("question", "")}
+            history_questions.append(item)
+            history_keys[norm(item["question"])].append(item)
+    except Exception as exc:
+        result["errors"].append({"file": path, "error": str(exc)})
 
 all_questions = []
 for path in sorted(glob.glob("prepared/*.json")):
@@ -61,7 +73,13 @@ for q in all_questions:
     by_exact[norm(q["question"])].append({k: q[k] for k in ("date", "topic", "question")})
     by_template[(q["topic"], template(q["question"]))].append({k: q[k] for k in ("date", "topic", "question")})
 result["exact_duplicate_groups"] = [v for v in by_exact.values() if len(v) > 1]
+result["duplicates_with_daily_history"] = []
+for q in all_questions:
+    prior = history_keys.get(norm(q["question"]), [])
+    if prior:
+        result["duplicates_with_daily_history"].append({"prepared": q, "daily_history": prior})
 result["template_duplicate_groups"] = [v for v in by_template.values() if len(v) > 1]
+result["daily_history_questions_checked"] = len(history_questions)
 
 # Report high textual similarity between different dates within the same topic.
 # This is a review signal, not an automatic failure: some skill families naturally share vocabulary.
@@ -89,5 +107,5 @@ result["exact_duplicate_group_count"] = len(result["exact_duplicate_groups"])
 
 Path("question_quality_audit.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
 print(json.dumps(result, ensure_ascii=False, indent=2))
-if result["errors"] or result["exact_duplicate_groups"]:
+if result["errors"] or result["exact_duplicate_groups"] or result["duplicates_with_daily_history"]:
     sys.exit(1)
