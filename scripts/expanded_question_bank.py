@@ -268,7 +268,7 @@ def question(kind, r):
         frame=r.choice(['公民の知識をもとに答えなさい。','日本国憲法に関する問いです。','権利の分類について、次の問いに答えなさい。','憲法と人権について正しいものを選びなさい。','公民分野の資料を読んで答えなさい。','日本の政治と人権に関する問題です。','次の説明に当てはまる権利を選びなさい。','憲法上の権利について、最も適切なものは？','社会の授業で学ぶ権利の分類に関する問いです。','人権の保障に関して、正しい答えを選びなさい。'])
         return frame+' '+stem,[answer]+wrong,answer
     if kind == 'election':
-        voters=r.randrange(500,3001,100); cast=voters*3//5
+        voters=r.randrange(500,10001,100); cast=voters*3//5
         good='60%'
         return f'有権者{voters}人のうち{cast}人が投票した。投票率は何％？',[good,'40%','75%','80%'],good
     if kind == 'tax':
