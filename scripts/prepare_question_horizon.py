@@ -3,13 +3,12 @@ from datetime import date,timedelta
 from pathlib import Path
 sys.path.insert(0,'scripts')
 from expanded_question_bank import fresh_questions
-start=date(2026,10,16)
+start=date(2026,10,20)
 end=date(2027,2,28)
 seen=set()
 for p in glob.glob('daily/*.json'):
     try:
         data=json.loads(Path(p).read_text(encoding='utf-8'))
-        if data.get('date','')>=start.isoformat():continue
         for q in data.get('questions',[]):
             seen.add(re.sub(r'\s+','',q['question']).casefold())
     except (ValueError,OSError,KeyError):pass
