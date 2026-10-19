@@ -9,8 +9,14 @@ on:
   schedule:
     - cron: '0 15 * * *'   # 00:00 JST: prepare today's display well before wake-up
     - cron: '0 17 * * *'   # 02:00 JST: backup generation
-    - cron: '30 18 * * *'  # 03:30 JST: late backup before ESP32 wake-up
-    - cron: '30 20 * * *'  # 05:30 JST: final scheduled run
+    - cron: '30 18 * * *'  # 03:30 JST: backup generation
+    - cron: '0 19 * * *'   # 04:00 JST: early-morning refresh
+    - cron: '30 19 * * *'  # 04:30 JST: backup refresh
+    - cron: '0 20 * * *'   # 05:00 JST: pre-wake refresh
+    - cron: '15 20 * * *'  # 05:15 JST: final pre-wake refresh
+    - cron: '30 20 * * *'  # 05:30 JST: scheduled refresh
+    - cron: '45 20 * * *'  # 05:45 JST: post-wake fallback
+    - cron: '0 21 * * *'   # 06:00 JST: late fallback
   workflow_dispatch:
 
 permissions:
