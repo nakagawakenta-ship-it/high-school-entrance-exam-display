@@ -11,18 +11,17 @@ def question(kind, r):
         x=r.randrange(130,160); y=x+r.randrange(5,25)
         return f'{a} is {x} cm tall; {b} is {y} cm. Who is taller?',[b,a,'Both','Cannot tell'],b
     if kind == 'dialogue':
-        places=['station','museum','library','aquarium','hospital','city hall','sports center','post office','park','art museum','bus stop','shopping mall']
-        start,dest=r.sample(places,2)
-        name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana','Sota','Aki'])
-        d=r.choice(['turn left','turn right','go straight'])
-        good=f'Please {d}.'
-        stem=r.choice([
-            f'A: How can I get from the {start} to the {dest}? B: ( )',
-            f'A: {name} is at the {start}. How can {name} get to the {dest}? B: ( )',
-            f'A: Excuse me. I am at the {start}. How do I get to the {dest}? B: ( )',
-            f'A: Could you tell me the way from the {start} to the {dest}? B: ( )'
+        stem,answer,wrong=r.choice([
+            ('A: Excuse me, where is the post office? B: ( )','It is next to the library.',['I went there yesterday.','At eight o’clock.','I like sports.']),
+            ('A: Would you like to join us for lunch? B: ( )','Yes, I would love to.',['I am sorry to hear that.','It is ten minutes long.','I went by bus.']),
+            ('A: Could you help me with this box? B: ( )','Of course.',['You are welcome.','It is very cold.','I bought it yesterday.']),
+            ('A: What did you do last weekend? B: ( )','I visited my grandmother.',['At the station.','Yes, I do.','It costs 500 yen.']),
+            ('A: I have a headache. B: ( )','You should get some rest.',['I am glad you like it.','It is on the second floor.','I played it yesterday.']),
+            ('A: How was the school trip? B: ( )','It was exciting.',['At seven thirty.','Two tickets, please.','I am going to the library.']),
+            ('A: May I use your pen? B: ( )','Sure. Here you are.',['I used it yesterday.','It is a sunny day.','No, I am not.']),
+            ('A: Thank you for showing me around. B: ( )','You are welcome.',['I am ten years old.','At the museum.','I am going to bed.'])
         ])
-        return stem,[good,'I went there last week.','It opens at nine.','I like reading books.'],good
+        return stem,[answer]+wrong,answer
     if kind == 'reading':
         name=r.choice(['Mika','Ken','Yuta','Hana','Emi','Rina','Sota','Aki'])
         p,reason=r.choice([('library','study for a test'),('museum','learn history'),('park','join a cleanup'),('station','meet a friend'),('shop','buy a gift'),('community center','practice music'),('beach','collect trash'),('science museum','see an exhibition'),('bookstore','buy a dictionary'),('gym','play basketball')])
@@ -41,7 +40,8 @@ def question(kind, r):
         name=r.choice(['Ken','Emi','Hana','Rina','Yuta','Sota','Mika','Aki'])
         job=r.choice(['teacher','doctor','scientist','artist','engineer','writer','nurse','cook'])
         city=r.choice(['Yokohama','Kamakura','Fujisawa','Odawara','Kawasaki','Sagamihara','Chigasaki'])
-        return f'{name} knows a {job} ( ) works in {city}.',['who','where','when','whose'],'who'
+        article='an' if job[0].lower() in 'aeiou' else 'a'
+        return f'{name} knows {article} {job} ( ) works in {city}.',['who','where','when','whose'],'who'
     if kind == 'passive':
         name=r.choice(['bridge','school','museum','library','station'])
         year=r.randrange(1980,2020)
@@ -66,10 +66,24 @@ def question(kind, r):
             place,feature=r.choice([('横浜港','貿易港として発達'),('箱根','火山地形と温泉'),('相模原台地','関東ローム層が広がる台地'),('三浦半島','海岸線が複雑で漁業も行われる'),('丹沢山地','山地が広がり森林が多い'),('湘南海岸','海水浴場や観光で知られる')])
             return f'神奈川県の{place}の特徴として適切なものは？',[feature,'大規模な砂漠が広がる','一年中永久凍土に覆われる','標高がすべて海面以下'],feature
         if mode==2:
-            climate=r.choice([('太平洋側','冬に晴天が多く乾燥しやすい'),('日本海側','冬に雪や雨が多い'),('瀬戸内','降水量が比較的少ない'),('中央高地','内陸で年較差が大きい'),('北海道','冷涼で梅雨の影響が比較的小さい'),('南西諸島','一年を通じて温暖で台風の影響を受けやすい'),('東北地方','冬の寒さが厳しく、日本海側では雪が多い'),('南四国','黒潮の影響を受け温暖で降水量が多い')])
-            stem=r.choice([f'日本の気候区分で「{climate[0]}」の特徴は？',f'「{climate[1]}」という気候の特徴がみられる地域は？'])
-            options=[climate[1],'一年中ほぼ毎日同じ量の雨が降る','年間を通じて気温が常に30℃を超える','冬でも必ず台風が上陸する']
-            return stem,options,climate[1]
+            climates=[
+                ('太平洋側','冬に晴天が多く乾燥しやすい'),
+                ('日本海側','冬に雪や雨が多い'),
+                ('瀬戸内','降水量が比較的少ない'),
+                ('中央高地','内陸で年較差が大きい'),
+                ('北海道','冷涼で梅雨の影響が比較的小さい'),
+                ('南西諸島','一年を通じて温暖で台風の影響を受けやすい')
+            ]
+            climate=r.choice(climates)
+            if r.choice([True,False]):
+                stem=f'日本の気候区分で「{climate[0]}」の特徴は？'
+                answer=climate[1]
+                options=[answer]+r.sample([x[1] for x in climates if x[1]!=answer],3)
+            else:
+                stem=f'「{climate[1]}」という気候の特徴がみられる地域は？'
+                answer=climate[0]
+                options=[answer]+r.sample([x[0] for x in climates if x[0]!=answer],3)
+            return stem,options,answer
         if mode==3:
             crops=[('北海道','てんさい'),('新潟平野','米'),('高知平野','促成栽培の野菜'),('鹿児島','畜産'),('長野県','高原野菜'),('沖縄県','さとうきび'),('青森県','りんご'),('山梨県','ぶどう'),('静岡県','茶'),('群馬県','こんにゃくいも'),('千葉県','落花生'),('愛媛県','みかん'),('熊本県','すいか'),('宮崎県','きゅうりの促成栽培'),('北海道十勝地方','大規模な畑作'),('三重県','養殖真珠'),('広島県','かきの養殖'),('富山平野','米'),('鳥取県','らっきょう'),('福井県','米'),('岩手県','肉用牛'),('和歌山県','うめ'),('栃木県','いちご'),('茨城県','れんこん'),('佐賀平野','米'),('徳島県','すだち'),('長崎県','じゃがいも'),('奈良県','柿'),('福岡県','いちご'),('石川県','米')]
             crop=r.choice(crops)
@@ -78,11 +92,24 @@ def question(kind, r):
             options=[crop[0]]+r.sample(distractors,3)
             return stem,options,crop[0]
         if mode==4:
-            resources=[('瀬戸内海沿岸','造船・鉄鋼などの工業'),('京浜工業地帯','機械・化学などの工業'),('中京工業地帯','自動車工業'),('北九州工業地域','かつての製鉄業'),('阪神工業地帯','機械・化学・金属工業'),('京葉工業地域','石油化学工業'),('東海地方','自動車・楽器などの工業'),('北陸地方','化学・機械などの工業'),('瀬戸内工業地域','石油化学・造船'),('鹿島臨海工業地域','石油化学・鉄鋼')]
+            resources=[
+                ('京浜工業地帯','機械工業'),
+                ('中京工業地帯','自動車工業'),
+                ('京葉工業地域','石油化学工業'),
+                ('北九州工業地域','かつての製鉄業'),
+                ('瀬戸内工業地域','造船業'),
+                ('東海地方','楽器工業')
+            ]
             resource=r.choice(resources)
             stem=f'「{resource[0]}」と関連が深い工業の特徴は？'
-            options=[resource[1]]+[x[1] for x in r.sample([x for x in resources if x[1]!=resource[1]],3)]
+            industries=[x[1] for x in resources]
+            if resource[1] in ('機械工業','自動車工業'):
+                distractor_pool=[x for x in industries if x not in ('機械工業','自動車工業')]
+            else:
+                distractor_pool=[x for x in industries if x!=resource[1]]
+            options=[resource[1]]+r.sample(distractor_pool,3)
             return stem,options,resource[1]
+
         river=r.choice(['相模川','多摩川','酒匂川','鶴見川','境川','早川','金目川','引地川','帷子川','大岡川'])
         stem=r.choice([f'{river}などの川沿いで大雨時に避難情報を確認する主な理由は？',f'{river}の流域で住民が防災情報を確認する必要があるのはなぜ？',f'大雨の際、{river}沿いの地域で注意すべきことは？',f'{river}周辺で避難判断に役立つ情報として最も重要なものは？'])
         return stem,['河川の増水や浸水のおそれ','必ず火山が噴火するため','海水温が必ず氷点下になるため','日照時間が必ずゼロになるため'],'河川の増水や浸水のおそれ'
@@ -167,10 +194,23 @@ def question(kind, r):
         stem=r.choice([f'為替が1ドル{a}円から{b}円に変化した。これは？',f'1ドルあたり{a}円だった為替相場が{b}円になった。この変化を何という？'])
         return stem,['円高・ドル安','円安・ドル高','変化なし','必ず物価が2倍'],'円高・ドル安'
     if kind == 'disaster':
-        area=r.choice(['相模川沿い','酒匂川沿い','境川沿い','鶴見川沿い','多摩川沿い','海岸近く','急傾斜地の近く','山間部'])
-        weather=r.choice(['台風','大雨','長雨','線状降水帯による豪雨','大雨と満潮'])
-        concern=r.choice([('浸水区域と避難場所','洪水'),('土砂災害警戒区域と避難経路','土砂災害')])
-        stem=r.choice([f'{weather}時に{area}で{concern[1]}に備え、ハザードマップで確認すべきことは？',f'{area}の住民が{weather}により{concern[1]}の危険を確認するには、ハザードマップのどこを見る？'])
+        river_areas=['相模川沿い','酒匂川沿い','境川沿い','鶴見川沿い','多摩川沿い']
+        slope_areas=['急傾斜地の近く','山間部']
+        coastal_areas=['海岸近く']
+        area=r.choice(river_areas+slope_areas+coastal_areas)
+        if area in slope_areas:
+            weather=r.choice(['大雨','長雨','線状降水帯による豪雨'])
+            concern=('土砂災害警戒区域と避難経路','土砂災害')
+        elif area in coastal_areas:
+            weather=r.choice(['台風','大雨と満潮','線状降水帯による豪雨'])
+            concern=('浸水想定区域と避難場所','洪水・高潮')
+        else:
+            weather=r.choice(['台風','大雨','線状降水帯による豪雨','大雨と満潮'])
+            concern=('浸水想定区域と避難場所','洪水・浸水')
+        stem=r.choice([
+            f'{weather}時に{area}で{concern[1]}に備え、ハザードマップで確認すべきことは？',
+            f'{area}の住民が{weather}による{concern[1]}の危険を確認するには、ハザードマップのどこを見る？'
+        ])
         return stem,[concern[0],'選挙区','税率','輸出額'],concern[0]
     if kind == 'budget':
         a=r.randrange(25,38);b=r.randrange(10,20);c=r.randrange(8,16)
@@ -186,7 +226,8 @@ def question(kind, r):
         a,b=r.choice([('It was raining','we stayed home'),('Mika was tired','she went to bed early'),('Ken studied hard','he passed the test'),('The bag was heavy','I carried it carefully')])
         good=r.choice(['so','because','although','unless'])
         if good=='because':
-            stem=f'{b.capitalize()} ( ) {a.lower()}.'
+            cause=a if a.startswith(('Mika','Ken')) else a.lower()
+            stem=f'{b.capitalize()} ( ) {cause}.'
             answer='because'
         elif good=='although':
             stem=f'( ) it was difficult, Ken finished the work.'
@@ -211,7 +252,12 @@ def question(kind, r):
         place,verb=r.choice([('the museum','visit'),('English','study'),('a letter','write'),('a cake','make'),('the guitar','play'),('a new song','sing'),('the park','visit'),('dinner','cook')])
         return f'{name} wants ( ) {place}.',['to '+verb,verb,verb+'ing',verb+'ed'],'to '+verb
     if kind == 'pronoun':
-        name,answer=r.choice([('Tom','him'),('Yuki','her'),('the children','them'),('my brother','him'),('my sister','her'),('Aki','him'),('Mika','her'),('the players','them'),('our teacher','him'),('the visitors','them'),('my aunt','her'),('the students','them')])
+        name,answer=r.choice([
+            ('Mr. Brown','him'),('Ms. Green','her'),('the children','them'),
+            ('my brother','him'),('my sister','her'),('the players','them'),
+            ('the visitors','them'),('my aunt','her'),('the students','them'),
+            ('the boy','him'),('the girl','her')
+        ])
         obj=r.choice(['the present','the book','the message','the tickets','the photos','the invitation','the key','the homework'])
         stem=r.choice([f'I gave {obj} to {name}. I gave it to ( ).',f'{name} needed {obj}, so I gave it to ( ).',f'I sent {obj} to {name}. I sent it to ( ).'])
         return stem,[answer,'he' if answer=='him' else 'she' if answer=='her' else 'they','his','themselves'],answer
@@ -273,12 +319,29 @@ def question(kind, r):
         return f'有権者{voters}人のうち{cast}人が投票した。投票率は何％？',[good,'40%','75%','80%'],good
     if kind == 'tax':
         price=r.randrange(500,5001,100); total=price*11//10
-        good=f'{total} yen'
+        good=f'{total}円'
         return f'税抜き{price}円の商品に消費税10％を加えると、税込み価格はいくら？',[good,f'{price}円',f'{price*2}円',f'{total+500}円'],good
     if kind == 'history_person':
-        person,event=r.choice([('聖徳太子','十七条の憲法'),('源頼朝','鎌倉幕府を開いた'),('織田信長','楽市・楽座を進めた'),('伊藤博文','初代内閣総理大臣'),('福沢諭吉','『学問のすゝめ』を著した'),('板垣退助','自由民権運動を進めた'),('ペリー','黒船で来航した')])
-        stem=r.choice([f'{person}の業績として正しいものはどれ？',f'歴史上の人物{person}について、正しい説明を選びなさい。',f'{person}と関係の深い出来事・業績はどれ？',f'日本史の人物{person}に関する説明として適切なものは？',f'{person}についての記述で正しいものを選びなさい。',f'次のうち、{person}が行ったことはどれ？',f'{person}に関連する歴史的な事柄はどれ？',f'歴史資料に登場する{person}について答えなさい。',f'{person}の活動を説明したものとして最も適切なのは？',f'人物と業績の組み合わせとして、{person}に当てはまるものは？'])
-        return stem,[event,'大日本帝国憲法を廃止した','元寇を指揮した','1192年に最初の幕府を開いた'],event
+        facts=[
+            ('聖徳太子','十七条の憲法'),
+            ('源頼朝','鎌倉幕府を開いた'),
+            ('織田信長','楽市・楽座を進めた'),
+            ('伊藤博文','初代内閣総理大臣'),
+            ('福沢諭吉','『学問のすゝめ』を著した'),
+            ('板垣退助','自由民権運動を進めた'),
+            ('ペリー','黒船で来航した')
+        ]
+        person,event=r.choice(facts)
+        stem=r.choice([
+            f'{person}の業績として正しいものはどれ？',
+            f'歴史上の人物{person}について、正しい説明を選びなさい。',
+            f'{person}と関係の深い出来事・業績はどれ？',
+            f'日本史の人物{person}に関する説明として適切なものは？',
+            f'{person}についての記述で正しいものを選びなさい。',
+            f'次のうち、{person}が行ったことはどれ？'
+        ])
+        distractors=[fact for who,fact in facts if who!=person]
+        return stem,[event]+r.sample(distractors,3),event
     if kind == 'map_direction':
         stem,answer,wrong=r.choice([
             ('地図で、北を上にしたとき東はどの方向？','右',['左','上','下']),
