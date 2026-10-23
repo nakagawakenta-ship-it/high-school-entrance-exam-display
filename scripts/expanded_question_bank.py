@@ -1,15 +1,52 @@
 import random, re
 
+def template_key(text):
+    s=str(text).casefold()
+    s=re.sub(r"\b(mika|ken|yuta|rina|emi|hana|sota|aki|riku|sara|aya)\b","<name>",s)
+    s=re.sub(r"\b(kamakura|yokohama|hakone|odawara|kyoto|fujisawa|kawasaki|sagamihara|chigasaki)\b","<city>",s)
+    s=re.sub(r"\d+(?:,\d{3})*(?:\.\d+)?","<n>",s)
+    return re.sub(r"\s+","",s)
+
 def question(kind, r):
     if kind == 'grammar':
-        name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana'])
-        city=r.choice(['Kamakura','Yokohama','Hakone','Odawara','Kyoto'])
-        year=r.randint(2011,2023)
-        return f'{name} has lived in {city} ( ) {year}.',['since','for','during','while'],'since'
+        mode=r.randrange(8)
+        if mode==0:
+            name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana'])
+            city=r.choice(['Kamakura','Yokohama','Hakone','Odawara','Kyoto'])
+            year=r.randint(2011,2023)
+            return f'{name} has lived in {city} ( ) {year}.',['since','for','during','while'],'since'
+        if mode==1:
+            name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana'])
+            years=r.choice(['two years','three years','five years','six months'])
+            return f'{name} has studied English ( ) {years}.',['for','since','during','from'],'for'
+        if mode==2:
+            return 'If you ( ) free this afternoon, please help me with the event.',['are','will be','were','have been'],'are'
+        if mode==3:
+            return 'The picture ( ) by my grandfather many years ago.',['was taken','took','is taking','has take'],'was taken'
+        if mode==4:
+            return 'My sister has never ( ) sushi.',['eaten','ate','eat','eating'],'eaten'
+        if mode==5:
+            return 'It is important ( ) the environment.',['to protect','protecting','protect','protected'],'to protect'
+        if mode==6:
+            return 'The girl ( ) lives next door is kind.',['who','where','when','whose'],'who'
+        return 'This math problem is ( ) than the last one.',['more difficult','most difficult','difficult','the difficult'],'more difficult'
     if kind == 'comparison':
-        a,b=r.sample(['Ken','Yuta','Mika','Emi','Hana','Sota'],2)
-        x=r.randrange(130,160); y=x+r.randrange(5,25)
-        return f'{a} is {x} cm tall; {b} is {y} cm. Who is taller?',[b,a,'Both','Cannot tell'],b
+        mode=r.randrange(5)
+        if mode==0:
+            a,b=r.sample(['Ken','Yuta','Mika','Emi','Hana','Sota'],2)
+            x=r.randrange(130,160); y=x+r.randrange(5,25)
+            return f'{a} is {x} cm tall; {b} is {y} cm. Who is taller?',[b,a,'Both','Cannot tell'],b
+        if mode==1:
+            a,b=r.sample(['Mika','Ken','Yuta','Emi','Hana','Sota'],2)
+            x=r.randrange(500,1501,100); y=x+r.randrange(100,501,100)
+            return f'{a}\\'s book costs {x} yen and {b}\\'s book costs {y} yen. Which book is more expensive?',[b,a,'They cost the same','Cannot tell'],b
+        if mode==2:
+            a,b=r.sample(['Route A','Route B','Route C','Route D'],2)
+            x=r.randrange(2,8); y=x+r.randrange(1,5)
+            return f'{a} is {x} km long and {b} is {y} km long. Which route is shorter?',[a,b,'They are equal','Cannot tell'],a
+        if mode==3:
+            return 'This math problem is ( ) than the last one.',['more difficult','most difficult','difficult','the difficult'],'more difficult'
+        return 'Choose the sentence that means both people have the same height.',['Mika is as tall as Ken.','Mika is taller Ken.','Mika is the tallest than Ken.','Mika is tall as Ken.'],'Mika is as tall as Ken.'
     if kind == 'dialogue':
         name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana','Sota','Aki'])
         scenarios=[
@@ -83,10 +120,28 @@ def question(kind, r):
         stem=r.choice([f'{name} went to the {p} to {reason}. Why did {name} go there?',f'{name} visited the {p} because {name} wanted to {reason}. What was the purpose of the visit?'])
         return stem,[f'To {reason}.','To play tennis.','To cook dinner.','To watch TV.'],f'To {reason}.'
     if kind == 'schedule':
-        start=r.randrange(8*60,10*60,5); gap=r.choice([10,15,20])
-        t=[start+i*gap for i in range(4)]; arrive=t[1]+r.randrange(1,gap)
+        mode=r.randrange(5)
         fmt=lambda v:f'{v//60}:{v%60:02d}'
-        return f'Buses: {", ".join(map(fmt,t))}. You arrive at {fmt(arrive)}. Next bus?',[fmt(t[2]),fmt(t[0]),fmt(t[1]),fmt(t[3])],fmt(t[2])
+        if mode==0:
+            start=r.randrange(8*60,10*60,5); gap=r.choice([10,15,20])
+            t=[start+i*gap for i in range(4)]; arrive=t[1]+r.randrange(1,gap)
+            answer=fmt(t[2])
+            return f'Buses: {", ".join(map(fmt,t))}. You arrive at {fmt(arrive)}. Next bus?',[answer,fmt(t[0]),fmt(t[1]),fmt(t[3])],answer
+        if mode==1:
+            start=r.randrange(8*60,10*60,10); gap=r.choice([10,15,20])
+            t=[start+i*gap for i in range(4)]; arrive=t[0]+r.randrange(1,gap)
+            answer=fmt(t[1])
+            return f'Trains leave at {", ".join(map(fmt,t))}. You reach the platform at {fmt(arrive)}. Which train can you catch first?',[answer,fmt(t[0]),fmt(t[2]),fmt(t[3])],answer
+        if mode==2:
+            start=r.randrange(9*60,15*60,10); duration=r.choice([35,45,50,60,75]); end=start+duration
+            answer=f'{duration} minutes'
+            return f'A school event starts at {fmt(start)} and finishes at {fmt(end)}. How long does it last?',[answer,f'{duration+10} minutes',f'{duration-10} minutes',f'{duration*2} minutes'],answer
+        if mode==3:
+            start=r.randrange(8*60,10*60,10); gap=r.choice([12,15,20])
+            t=[start+i*gap for i in range(4)]; arrive=t[2]-r.randrange(1,gap); answer=fmt(t[2])
+            return f'A shuttle departs at {", ".join(map(fmt,t))}. If you arrive at {fmt(arrive)}, what is the next departure?',[answer,fmt(t[0]),fmt(t[1]),fmt(t[3])],answer
+        start=r.randrange(13*60,16*60,5); duration=r.choice([80,90,100,110]); end=start+duration; answer=fmt(end)
+        return f'A film begins at {fmt(start)} and lasts {duration} minutes. When does it end?',[answer,fmt(end+30),fmt(end-30),fmt(start+duration*2)],answer
     if kind == 'fee':
         mode=r.randrange(6)
         if mode==0:
@@ -120,15 +175,32 @@ def question(kind, r):
             answer=f'{total} yen'; choices=[answer,f'{total+discount} yen',f'{total-discount} yen',f'{adult*count} yen']
         return stem,choices,answer
     if kind == 'relative':
-        name=r.choice(['Ken','Emi','Hana','Rina','Yuta','Sota','Mika','Aki'])
-        job=r.choice(['teacher','doctor','scientist','artist','engineer','writer','nurse','cook'])
-        city=r.choice(['Yokohama','Kamakura','Fujisawa','Odawara','Kawasaki','Sagamihara','Chigasaki'])
-        article = 'an' if job[0].lower() in 'aeiou' else 'a'
-        return f'{name} knows {article} {job} ( ) works in {city}.',['who','where','when','whose'],'who'
+        mode=r.randrange(4)
+        if mode==0:
+            name=r.choice(['Ken','Emi','Hana','Rina','Yuta','Sota','Mika','Aki'])
+            job=r.choice(['teacher','doctor','scientist','artist','engineer','writer','nurse','cook'])
+            city=r.choice(['Yokohama','Kamakura','Fujisawa','Odawara','Kawasaki','Sagamihara','Chigasaki'])
+            article='an' if job[0].lower() in 'aeiou' else 'a'
+            return f'{name} knows {article} {job} ( ) works in {city}.',['who','where','when','whose'],'who'
+        if mode==1:
+            return 'The woman ( ) lives next door is a doctor.',['who','where','when','whose'],'who'
+        if mode==2:
+            return 'This is the book ( ) I bought yesterday.',['that','who','where','when'],'that'
+        return 'I visited a town ( ) has a famous castle.',['which','who','when','where'],'which'
     if kind == 'passive':
-        name=r.choice(['bridge','school','museum','library','station'])
-        year=r.randrange(1980,2020)
-        return f'The {name} was ( ) in {year}.',['built','build','building','builds'],'built'
+        mode=r.randrange(6)
+        if mode==0:
+            name=r.choice(['bridge','school','museum','library','station']); year=r.randrange(1980,2020)
+            return f'The {name} was ( ) in {year}.',['built','build','building','builds'],'built'
+        if mode==1:
+            return 'The letter was ( ) by Ken yesterday.',['written','wrote','write','writing'],'written'
+        if mode==2:
+            return 'This song was ( ) by a Japanese composer.',['composed','compose','composing','composes'],'composed'
+        if mode==3:
+            return 'English is ( ) in many countries.',['spoken','speak','speaking','speaks'],'spoken'
+        if mode==4:
+            return 'The picture was ( ) by Mika last week.',['drawn','drew','draw','drawing'],'drawn'
+        return 'The first telephone was ( ) by Alexander Graham Bell.',['invented','invent','inventing','invents'],'invented'
     if kind == 'if':
         event=r.choice(['sports day','picnic','beach cleanup','school trip','soccer game','outdoor concert','class trip','tennis match'])
         day=r.choice(['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday'])
@@ -136,9 +208,22 @@ def question(kind, r):
         stem=r.choice([f'If it ( ) on {day}, {name} will cancel the {event}.',f'If it ( ) this weekend, {name} will move the {event} indoors.',f'{name} will cancel the {event} if it ( ) on {day}.'])
         return stem,['rains','will rain','rained','raining'],'rains'
     if kind == 'data':
-        days=r.sample(['Mon','Tue','Wed','Thu','Fri'],3); nums=r.sample(range(80,240,5),3)
-        winner=days[nums.index(max(nums))]
-        return 'Visitors: '+', '.join(f'{d} {n}' for d,n in zip(days,nums))+'. Which day had the most?',[winner]+[d for d in days if d!=winner]+['Equal'],winner
+        mode=r.randrange(4)
+        if mode==0:
+            days=r.sample(['Mon','Tue','Wed','Thu','Fri'],3); nums=r.sample(range(80,240,5),3)
+            winner=days[nums.index(max(nums))]
+            return 'Visitors: '+', '.join(f'{d} {n}' for d,n in zip(days,nums))+'. Which day had the most?',[winner]+[d for d in days if d!=winner]+['Equal'],winner
+        if mode==1:
+            clubs=r.sample(['soccer','tennis','music','art','science','drama'],4); counts=r.sample(range(8,31,2),4)
+            winner=clubs[counts.index(max(counts))]
+            return 'Club survey: '+', '.join(f'{c} {n}' for c,n in zip(clubs,counts))+'. Which club had the most members?',[winner]+[c for c in clubs if c!=winner],winner
+        if mode==2:
+            days=r.sample(['Mon','Tue','Wed','Thu','Fri'],4); nums=r.sample(range(70,201,10),4)
+            lowest=days[nums.index(min(nums))]
+            return 'Daily rainfall (mm): '+', '.join(f'{d} {n}' for d,n in zip(days,nums))+'. Which day had the least rain?',[lowest]+[d for d in days if d!=lowest],lowest
+        scores=r.sample(range(55,101,5),3); names=r.sample(['Mika','Ken','Yuta','Rina','Emi','Hana'],3)
+        best=names[scores.index(max(scores))]
+        return 'Test scores: '+', '.join(f'{n} {v}' for n,v in zip(names,scores))+'. Who got the highest score?',[best]+[n for n in names if n!=best]+['All the same'],best
     if kind == 'geography':
         mode=r.randrange(6)
         if mode==0:
@@ -256,8 +341,16 @@ def question(kind, r):
             return '法律や命令が憲法に違反していないかを裁判所が判断する権限は？',['違憲審査権','国政調査権','条例制定権','予算編成権'],'違憲審査権'
         return '内閣総理大臣を指名する機関はどれですか。',['国会','最高裁判所','都道府県知事','日本銀行'],'国会'
     if kind == 'population':
+        mode=r.randrange(4)
         young=r.randrange(9,19); old=r.randrange(22,38); work=100-young-old
-        return f'人口構成：15歳未満{young}％、15～64歳{work}％、65歳以上{old}％。最大の層は？',['15～64歳','15歳未満','65歳以上','すべて同じ'],'15～64歳'
+        if mode==0:
+            return f'人口構成：15歳未満{young}％、15～64歳{work}％、65歳以上{old}％。最大の層は？',['15～64歳','15歳未満','65歳以上','すべて同じ'],'15～64歳'
+        if mode==1:
+            diff=old-young
+            return f'ある地域では15歳未満が{young}％、65歳以上が{old}％である。高齢者の割合は子どもの割合より何ポイント高い？',[f'{diff}ポイント',f'{old+young}ポイント',f'{young}ポイント',f'{old}ポイント'],f'{diff}ポイント'
+        if mode==2:
+            return f'年齢別人口：15歳未満{young}％、15～64歳{work}％、65歳以上{old}％。最も割合が小さい層は？',['15歳未満','15～64歳','65歳以上','すべて同じ'],'15歳未満'
+        return f'高齢者が人口の{old}％、子どもが{young}％を占める地域がある。どちらの割合が大きい？',['65歳以上','15歳未満','同じ','資料だけでは分からない'],'65歳以上'
     if kind == 'trade':
         mode=r.randrange(6)
         if mode==0:
@@ -327,12 +420,21 @@ def question(kind, r):
         total=a+b+c
         return f'資料の3項目：社会保障{a}％、教育{b}％、公共事業{c}％。合計は何％？',[f'{total}％',f'{a+b}％',f'{total+10}％',f'{a+c}％'],f'{total}％'
     if kind == 'tense':
-        name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana','Sota','Aki'])
-        activity=r.choice(['the museum','soccer','a letter','dinner','the piano','a book'])
-        time=r.choice(['yesterday','last Sunday','two days ago','last night'])
-        verb={'the museum':'visit','soccer':'play','a letter':'write','dinner':'cook','the piano':'practice','a book':'read'}[activity]
-        past={'visit':'visited','play':'played','write':'wrote','cook':'cooked','practice':'practiced','read':'read'}[verb]
-        return f'{name} ( ) {activity} {time}.',['visits',past,'has visited','visiting'],past
+        mode=r.randrange(5)
+        if mode==0:
+            name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana','Sota','Aki'])
+            activity=r.choice(['the museum','soccer','a letter','dinner','the piano','a book'])
+            time=r.choice(['yesterday','last Sunday','two days ago','last night'])
+            verb={'the museum':'visit','soccer':'play','a letter':'write','dinner':'cook','the piano':'practice','a book':'read'}[activity]
+            past={'visit':'visited','play':'played','write':'wrote','cook':'cooked','practice':'practiced','read':'read'}[verb]
+            return f'{name} ( ) {activity} {time}.',['visits',past,'has visited','visiting'],past
+        if mode==1:
+            return 'Have you ever ( ) to Hokkaido?',['been','went','go','being'],'been'
+        if mode==2:
+            return 'They ( ) the science museum yesterday.',['visited','visit','have visited','visiting'],'visited'
+        if mode==3:
+            return 'We ( ) our grandparents next Sunday.',['will visit','visited','have visited','visiting'],'will visit'
+        return 'When I called Mika, she ( ) dinner.',['was cooking','cooked','cooks','is cooking'],'was cooking'
     if kind == 'conjunction':
         a,b=r.choice([('It was raining','we stayed home'),('Mika was tired','she went to bed early'),('Ken studied hard','he passed the test'),('The bag was heavy','I carried it carefully')])
         good=r.choice(['so','because','although','unless'])
@@ -358,9 +460,18 @@ def question(kind, r):
         stem=r.choice([f'Choose the correctly ordered sentence: {name} / interested / is / in / {obj}.',f'Put the words in the correct order to make a sentence: {name} / is / in / interested / {obj}.'])
         return stem,[correct,f'{name} interested is in {obj}.',f'Is {name} in interested {obj}.',f'{name} is in {obj} interested.'],correct
     if kind == 'infinitive':
-        name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana','Sota','Aki'])
-        place,verb=r.choice([('the museum','visit'),('English','study'),('a letter','write'),('a cake','make'),('the guitar','play'),('a new song','sing'),('the park','visit'),('dinner','cook')])
-        return f'{name} wants ( ) {place}.',['to '+verb,verb,verb+'ing',verb+'ed'],'to '+verb
+        mode=r.randrange(5)
+        if mode==0:
+            name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana','Sota','Aki'])
+            place,verb=r.choice([('the museum','visit'),('English','study'),('a letter','write'),('a cake','make'),('the guitar','play'),('a new song','sing'),('the park','visit'),('dinner','cook')])
+            return f'{name} wants ( ) {place}.',['to '+verb,verb,verb+'ing',verb+'ed'],'to '+verb
+        if mode==1:
+            return 'It is important ( ) English every day.',['to study','studying','study','studied'],'to study'
+        if mode==2:
+            return 'Ken went to the library ( ) a book.',['to borrow','borrow','borrowing','borrowed'],'to borrow'
+        if mode==3:
+            return 'I have a lot of homework ( ) tonight.',['to do','doing','do','did'],'to do'
+        return 'She was happy ( ) you again.',['to see','seeing','saw','see'],'to see'
     if kind == 'pronoun':
         name,answer=r.choice([('Tom','him'),('Yuki','her'),('the children','them'),('my brother','him'),('my sister','her'),('Aki','him'),('Mika','her'),('the players','them'),('our teacher','him'),('the visitors','them'),('my aunt','her'),('the students','them')])
         obj=r.choice(['the present','the book','the message','the tickets','the photos','the invitation','the key','the homework'])
@@ -379,11 +490,19 @@ def question(kind, r):
         place=r.choice(['the library','the station','the city museum','the nearest bus stop','the post office','the science museum','the city hall','the public pool','the art gallery','the community center','the nearest pharmacy','the bus terminal','the train platform','the school gym','the sports center','the history museum','the concert hall','the information desk','the bookshop','the town office','the nearest bank','the police station','the aquarium','the botanical garden','the shopping center','the local hospital','the ferry port','the language school','the tourist office','the nearest restroom','the main entrance','the conference room','the music room','the swimming pool','the ticket counter','the post office near here','the nearest park','the city library','the train station exit','the meeting room'])
         return f'A visitor asks about {place}: Could you tell me ( )?', [f'where {place} is',f'where is {place}',f'where does {place}',f'where {place}'],f'where {place} is'
     if kind == 'superlative':
-        names=r.sample(['Ken','Yuta','Mika','Emi','Hana','Sota','Rina','Aki'],3)
-        heights=sorted(r.sample(range(145,181,5),3))
-        tallest=names[heights.index(max(heights))]
-        data=', '.join(f'{n}: {h} cm' for n,h in zip(names,heights))
-        return f'Heights ({data}). Who is the tallest?',[tallest]+[n for n in names if n!=tallest]+['They are equal'],tallest
+        mode=r.randrange(4)
+        if mode==0:
+            names=r.sample(['Ken','Yuta','Mika','Emi','Hana','Sota','Rina','Aki'],3)
+            heights=r.sample(range(145,181,5),3); tallest=names[heights.index(max(heights))]
+            data=', '.join(f'{n}: {h} cm' for n,h in zip(names,heights))
+            return f'Heights ({data}). Who is the tallest?',[tallest]+[n for n in names if n!=tallest]+['They are equal'],tallest
+        if mode==1:
+            return 'Of the three books, this one is the ( ).',['most interesting','more interesting','interesting','as interesting'],'most interesting'
+        if mode==2:
+            names=r.sample(['Mika','Ken','Yuta','Rina','Emi','Hana'],3); times=r.sample(range(12,31),3)
+            fastest=names[times.index(min(times))]; data=', '.join(f'{n}: {t} seconds' for n,t in zip(names,times))
+            return f'Race times ({data}). Who ran the fastest?',[fastest]+[n for n in names if n!=fastest]+['They tied'],fastest
+        return 'Choose the sentence that correctly compares three places.',['Mount A is the highest of the three.','Mount A is higher than all the three.','Mount A is the most high.','Mount A is as highest as B.'],'Mount A is the highest of the three.'
     if kind == 'dialogue_intent':
         stem,answer,wrong=r.choice([
             ('A: Thank you for helping me. B: ( )','You are welcome.',['I am sorry.','Here you are.','Good luck yesterday.']),
@@ -424,9 +543,18 @@ def question(kind, r):
         good=f'1:{denominator:,}'
         return f'地図上で{cm}cmが実際の{actual_km:g}kmに当たる。この地図の縮尺は？',[good,'1:25,000','1:50,000','1:100,000'],good
     if kind == 'population_change':
-        total=r.randrange(800,3001,20); group=total//4
-        pct=25
-        return f'人口{total}人の町で15歳未満が{group}人いる。15歳未満の割合は？',[f'{pct}%',f'{pct*2}%',f'{pct/2:g}%',f'{100-pct}%'],f'{pct}%'
+        mode=r.randrange(4)
+        if mode==0:
+            total=r.randrange(800,3001,20); group=total//4
+            return f'人口{total}人の町で15歳未満が{group}人いる。15歳未満の割合は？',['25%','50%','12.5%','75%'],'25%'
+        if mode==1:
+            total=r.randrange(1000,5001,100); pct=r.choice([10,15,20,30]); children=total*pct//100
+            return f'人口{total}人の市で子どもが全体の{pct}％を占める。子どもは何人？',[str(children),str(children+100),str(total//2),str(total-children)],str(children)
+        if mode==2:
+            before=r.randrange(1000,5001,100); after=before-r.choice([100,200,300,400,500]); pct=(before-after)*100//before
+            return f'ある町の人口は{before}人から{after}人に減った。人口減少率は何％？',[f'{pct}%',f'{pct+10}%',f'{pct-5}%',f'{100-pct}%'],f'{pct}%'
+        before=r.randrange(1000,5001,100); after=before+before//5
+        return f'人口が{before}人から{after}人に増えた。増加した人数は？',[str(after-before),str(after),str(before//5+100),str(before-after)],str(after-before)
     if kind == 'industry':
         region,industry=r.choice([('中京工業地帯','自動車工業'),('京浜工業地帯','機械・化学工業'),('京葉工業地域','石油化学工業'),('瀬戸内工業地域','造船・石油化学工業'),('北九州工業地域','かつての製鉄業')])
         stem=r.choice([f'{region}と関連が深い工業はどれ？',f'工業地域の特色として、{region}に当てはまるものは？',f'{region}の工業について正しい説明はどれ？',f'日本の工業地帯・地域を学ぶ問題です。{region}と結びつく工業は？',f'{region}で発達した工業の特徴を選びなさい。',f'次のうち{region}を代表する工業はどれ？',f'{region}についての説明として最も適切なものは？',f'地理資料から判断すると、{region}と関連する産業はどれ？'])
@@ -441,9 +569,18 @@ def question(kind, r):
         frame=r.choice(['公民の知識をもとに答えなさい。','日本国憲法に関する問いです。','権利の分類について、次の問いに答えなさい。','憲法と人権について正しいものを選びなさい。','公民分野の資料を読んで答えなさい。','日本の政治と人権に関する問題です。','次の説明に当てはまる権利を選びなさい。','憲法上の権利について、最も適切なものは？','社会の授業で学ぶ権利の分類に関する問いです。','人権の保障に関して、正しい答えを選びなさい。'])
         return frame+' '+stem,[answer]+wrong,answer
     if kind == 'election':
-        voters=r.randrange(500,10001,100); cast=voters*3//5
-        good='60%'
-        return f'有権者{voters}人のうち{cast}人が投票した。投票率は何％？',[good,'40%','75%','80%'],good
+        mode=r.randrange(4); voters=r.randrange(500,10001,100)
+        if mode==0:
+            cast=voters*3//5
+            return f'有権者{voters}人のうち{cast}人が投票した。投票率は何％？',['60%','40%','75%','80%'],'60%'
+        if mode==1:
+            cast=voters*45//100
+            return f'有権者{voters}人のうち{cast}人が投票した。投票率を選びなさい。',['45%','55%','60%','75%'],'45%'
+        if mode==2:
+            rate=r.choice([50,60,70,80]); cast=voters*rate//100
+            return f'有権者{voters}人で投票率が{rate}％だった。投票した人は何人？',[str(cast),str(voters-cast),str(voters//2),str(voters+cast)],str(cast)
+        rate=r.choice([50,60,70,80]); cast=voters*rate//100
+        return f'投票率が{rate}％で、投票した人が{cast}人だった。選挙人名簿の人数は？',[str(voters),str(cast),str(voters+cast),str(voters-cast)],str(voters)
     if kind == 'tax':
         mode=r.randrange(6)
         price=r.randrange(500,5001,100)
@@ -496,21 +633,22 @@ def question(kind, r):
 
 EN=['grammar','comparison','dialogue','reading','schedule','fee','relative','passive','if','data','tense','conjunction','word_order','infinitive','pronoun','preposition','modal','indirect','superlative','dialogue_intent']
 SO=['geography','landform','history','chronology','civics','population','trade','exchange','disaster','budget','world_region','map_scale','population_change','industry','constitution','election','tax','history_person','map_direction','energy']
-def fresh_questions(date, used):
+def fresh_questions(date, used, recent_templates=None):
     seed=int(date.strftime('%Y%m%d')); r=random.Random(seed)
+    recent_templates=set(recent_templates or ())
     results=[]
     for subject, kinds in [('english',EN),('social',SO)]:
-        # Five different question families per subject each day, rotating across days.
         shift=(date.toordinal()*3)%len(kinds)
         selected=[kinds[(shift+i*3)%len(kinds)] for i in range(5)]
         for index,kind in enumerate(selected,1):
             for _ in range(10000):
                 q,choices,answer=question(kind,r)
                 key=re.sub(r'\s+','',q).casefold()
-                if key not in used and len(set(choices))==4 and answer in choices:
+                template_id=(subject,kind,template_key(q))
+                if key not in used and template_id not in recent_templates and len(set(choices))==4 and answer in choices:
                     used.add(key)
                     results.append(dict(id=f'{"eng" if subject=="english" else "soc"}-{date:%Y%m%d}-{index}',subject=subject,topic=kind,question=q,choices=choices,answer=answer))
                     break
             else:
-                raise RuntimeError('Unable to produce a unique valid '+kind+' question')
+                raise RuntimeError('Unable to produce a unique valid '+kind+' question after recent-template filtering')
     return results
