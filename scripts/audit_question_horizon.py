@@ -266,3 +266,5 @@ if result["errors"] or result["exact_duplicate_groups"] or result["history_dupli
     sys.exit(1)
 
 # Re-run the audit after the 2026-10-24 validated horizon regeneration.
+
+# Re-audit after repairing archived daily-question warnings.
