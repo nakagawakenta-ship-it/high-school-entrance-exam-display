@@ -1,4 +1,4 @@
-import json,glob,re,sys
+import json,glob,re,sys,random
 from datetime import date,timedelta
 from pathlib import Path
 sys.path.insert(0,'scripts')
@@ -20,9 +20,10 @@ while d<=end:
     if len(questions)!=10:raise RuntimeError('Incorrect count '+str(d))
     if sum(q['subject']=='english' for q in questions)!=5:raise RuntimeError('English count '+str(d))
     if sum(q['subject']=='social' for q in questions)!=5:raise RuntimeError('Social count '+str(d))
-    for q in questions:
+    for index,q in enumerate(questions):
         if len(q['choices'])!=4 or len(set(q['choices']))!=4 or q['answer'] not in q['choices']:
             raise RuntimeError('Invalid answers '+str(d))
+        random.Random(int(d.strftime('%Y%m%d')) + index * 997).shuffle(q['choices'])
     payload={'date':d.isoformat(),'title':'高校入試 今日の問題 '+d.isoformat(),'questions':questions}
     Path('prepared',d.isoformat()+'.json').write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     count+=10
