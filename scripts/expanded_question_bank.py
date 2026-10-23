@@ -313,7 +313,18 @@ def question(kind, r):
             (1989,'消費税導入'),(1995,'阪神・淡路大震災'),(2011,'東日本大震災')
         ]
         year,event=r.choice(events)
-        stem=r.choice([f'{year}年の出来事として正しいものは？',f'次のうち、{year}年に起きた出来事は？'])
+        stem=r.choice([
+            f'{year}年の出来事として正しいものは？',
+            f'次のうち、{year}年に起きた出来事は？',
+            f'日本史で{year}年の出来事として正しいものを選びなさい。',
+            f'年表の{year}年にあたる出来事はどれ？',
+            f'年代を確認し、{year}年の出来事を選びなさい。',
+            f'次の出来事のうち、{year}年に該当するものは？',
+            f'歴史資料に示された{year}年の出来事は？',
+            f'日本史の年代問題です。{year}年にあったことは？',
+            f'「{year}年」の欄に入る出来事を選びなさい。',
+            f'歴史の流れから、{year}年に起きたことを選びなさい.'
+        ])
         distractors=[x[1] for x in r.sample([x for x in events if x[1]!=event],3)]
         return stem,[event]+distractors,event
     if kind == 'chronology':
