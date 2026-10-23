@@ -16,7 +16,7 @@ def question(kind, r):
             ("A: I am sorry I am late, {name}. B: ( )","That is all right.",["You are welcome.","See you tomorrow.","Here is your ticket."]),
             ("A: Thank you for helping me, {name}. B: ( )","You are welcome.",["I am sorry to hear that.","Good luck yesterday.","Here you are."]),
             ("A: I am going to give a speech tomorrow. B: ( )","Good luck!",["You are welcome.","That is mine.","I went yesterday."]),
-            ("A: Why do not we clean the beach on Sunday? B: ( )","That sounds good.",["It is blue.","I cannot find it.","Here you are."]),
+            ("A: Why don't we clean the beach on Sunday? B: ( )","That sounds good.",["It is blue.","I cannot find it.","Here you are."]),
             ("A: May I use your pen? B: ( )","Of course.",["I used it yesterday.","It is Monday.","You are welcome."]),
             ("A: Would you like some tea? B: ( )","Yes, please.",["At the station.","For three years.","See you yesterday."]),
             ("A: I have a headache. B: ( )","You should get some rest.",["You are welcome.","It is ten o clock.","I like baseball."]),
@@ -270,7 +270,7 @@ def question(kind, r):
             ex=r.randrange(70,96,5); im=r.randrange(105,136,5)
             return f'輸出指数が100から{ex}に下がり、輸入指数が100から{im}に上がった。どの変化が起きた？',['輸出減・輸入増','輸出増・輸入減','輸出入とも増加','変化なし'],'輸出減・輸入増'
         if mode==3:
-            ex=r.randrange(120,181,10); im=r.randrange(70,111,10)
+            ex=r.randrange(120,181,10); im=r.randrange(70,100,10)
             return f'輸出額の指数が{ex}、輸入額の指数が{im}（基準年はいずれも100）である。基準年と比べた説明は？',['輸出は増え、輸入は減った','輸出は減り、輸入は増えた','輸出入とも減った','輸出入とも変化なし'],'輸出は増え、輸入は減った'
         if mode==4:
             exports=r.randrange(120,301,20); imports=exports-r.randrange(20,101,20)
@@ -317,7 +317,10 @@ def question(kind, r):
             total=a+b
             return f'歳出のうち社会保障が{a}％、教育が{b}％である。2項目の合計は何％？',[f'{total}％',f'{a-b}％',f'{total+10}％',f'{c}％'],f'{total}％'
         if mode==2:
-            return f'資料：社会保障{a}％、教育{b}％、公共事業{c}％。最も割合が小さい項目は？',['公共事業','教育','社会保障','すべて同じ'],'公共事業' if c<b and c<a else ('教育' if b<c and b<a else '社会保障')
+            if c==b:
+                c = c-1 if c>8 else c+1
+            answer='公共事業' if c<b else '教育'
+            return f'資料：社会保障{a}％、教育{b}％、公共事業{c}％。最も割合が小さい項目は？',['公共事業','教育','社会保障','すべて同じ'],answer
         if mode==3:
             diff=a-b
             return f'社会保障費の割合は{a}％、教育費は{b}％である。社会保障費は何ポイント高い？',[f'{diff}ポイント',f'{a+b}ポイント',f'{b}ポイント',f'{a}ポイント'],f'{diff}ポイント'
