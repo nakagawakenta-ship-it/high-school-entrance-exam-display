@@ -39,7 +39,7 @@ def question(kind, r):
         if mode==1:
             a,b=r.sample(['Mika','Ken','Yuta','Emi','Hana','Sota'],2)
             x=r.randrange(500,1501,100); y=x+r.randrange(100,501,100)
-            return f'{a}\\'s book costs {x} yen and {b}\\'s book costs {y} yen. Which book is more expensive?',[b,a,'They cost the same','Cannot tell'],b
+            return f"{a}'s book costs {x} yen and {b}'s book costs {y} yen. Which book is more expensive?",[b,a,'They cost the same','Cannot tell'],b
         if mode==2:
             a,b=r.sample(['Route A','Route B','Route C','Route D'],2)
             x=r.randrange(2,8); y=x+r.randrange(1,5)
