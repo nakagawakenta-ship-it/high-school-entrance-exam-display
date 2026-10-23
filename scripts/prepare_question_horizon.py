@@ -24,7 +24,7 @@ Path('prepared').mkdir(exist_ok=True)
 count=0
 d=start
 while d<=end:
-    cutoff=d-timedelta(days=7)
+    cutoff=d-timedelta(days=6)
     recent_templates={key for history_day,keys in recent_history if cutoff <= history_day < d for key in keys}
     questions=fresh_questions(d,seen,recent_templates)
     if len(questions)!=10:raise RuntimeError('Incorrect count '+str(d))
