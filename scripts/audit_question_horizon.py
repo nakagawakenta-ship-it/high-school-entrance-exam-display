@@ -25,6 +25,7 @@ result = {
     "template_duplicate_groups": [],
     "near_duplicate_pairs": [],
     "history_duplicate_groups": [],
+    "recent_template_repeat_groups": [],
     "topic_counts": {},
     "source_counts": {"daily": 0, "prepared": 0},
 }
@@ -202,6 +203,22 @@ result["template_duplicate_groups"] = [
     v for v in by_template.values() if len({x["date"] for x in v}) > 1
 ]
 
+# The future bank must not repeat a normalized template within three days.
+recent_by_template = defaultdict(list)
+for q in all_questions:
+    if q["source"] == "prepared" and q["date"] > TODAY_JST.isoformat():
+        recent_by_template[(q["subject"], q["topic"], template(q["question"]))].append(
+            {k: q[k] for k in ("date", "subject", "topic", "question")}
+        )
+for entries in recent_by_template.values():
+    entries.sort(key=lambda x: x["date"])
+    for i, a in enumerate(entries):
+        da = date.fromisoformat(a["date"])
+        for b in entries[i + 1:]:
+            db = date.fromisoformat(b["date"])
+            if (db - da).days <= 3:
+                result["recent_template_repeat_groups"].append({"a": a, "b": b})
+
 # Similarity candidates are review warnings, not automatic failures; common skills can share words.
 groups = defaultdict(list)
 for q in all_questions:
@@ -223,6 +240,7 @@ result["template_duplicate_group_count"] = len(result["template_duplicate_groups
 result["near_duplicate_pair_count"] = len(result["near_duplicate_pairs"])
 result["exact_duplicate_group_count"] = len(result["exact_duplicate_groups"])
 result["history_duplicate_group_count"] = len(result["history_duplicate_groups"])
+result["recent_template_repeat_count"] = len(result["recent_template_repeat_groups"])
 result["content_warning_count"] = len(result["content_warnings"])
 result["daily_history_questions_checked"] = len(history)
 result["content_warnings"] = result["content_warnings"][:300]
@@ -238,6 +256,7 @@ print(json.dumps({
     "prepared_future_days_checked": result["prepared_future_days_checked"],
     "exact_duplicate_group_count": result["exact_duplicate_group_count"],
     "history_duplicate_group_count": result["history_duplicate_group_count"],
+    "recent_template_repeat_count": result["recent_template_repeat_count"],
     "template_duplicate_group_count": result["template_duplicate_group_count"],
     "near_duplicate_pair_count": result["near_duplicate_pair_count"],
     "content_warning_count": result["content_warning_count"],
