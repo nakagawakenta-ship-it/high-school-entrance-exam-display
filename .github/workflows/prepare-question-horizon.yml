@@ -9,7 +9,28 @@ on:
 permissions:
   contents: write
 jobs:
+  validate:
+    if: github.ref != 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Generate and validate in an isolated branch run
+        run: python scripts/prepare_question_horizon.py
+      - name: Audit generated horizon
+        run: python scripts/audit_question_horizon.py
+      - name: Preserve generated preview
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: question-horizon-branch-validation
+          path: |
+            prepared/*.json
+            question_quality_audit.json
   prepare:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
