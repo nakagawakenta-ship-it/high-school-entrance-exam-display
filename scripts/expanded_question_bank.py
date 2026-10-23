@@ -88,9 +88,37 @@ def question(kind, r):
         fmt=lambda v:f'{v//60}:{v%60:02d}'
         return f'Buses: {", ".join(map(fmt,t))}. You arrive at {fmt(arrive)}. Next bus?',[fmt(t[2]),fmt(t[0]),fmt(t[1]),fmt(t[3])],fmt(t[2])
     if kind == 'fee':
-        student=r.randrange(200,600,50); adult=student+r.randrange(200,450,50); n=r.choice([2,3,4])
-        total=student+adult*n
-        return f'Tickets: student {student} yen, adult {adult} yen. One student and {n} adults: total?',[str(total),str(total-adult),str(total+adult),str(total+student)],str(total)
+        mode=r.randrange(6)
+        if mode==0:
+            student=r.randrange(200,600,50); adult=student+r.randrange(200,450,50); n=r.choice([2,3,4])
+            total=student+adult*n
+            stem=f'Tickets: student {student} yen, adult {adult} yen. One student and {n} adults: total?'
+            answer=str(total); choices=[answer,str(total-adult),str(total+adult),str(total+student)]
+        elif mode==1:
+            child=r.randrange(150,401,50); adult=child+r.randrange(200,401,50)
+            total=2*child+2*adult
+            stem=f'At a museum, a child ticket costs {child} yen and an adult ticket costs {adult} yen. What is the total for two children and two adults?'
+            answer=f'{total} yen'; choices=[answer,f'{total-child} yen',f'{total+child} yen',f'{total+adult} yen']
+        elif mode==2:
+            student=r.randrange(250,601,50); adult=student+r.randrange(150,401,50)
+            diff=adult-student
+            stem=f'An adult ticket costs {adult} yen and a student ticket costs {student} yen. How much more is the adult ticket?'
+            answer=f'{diff} yen'; choices=[answer,f'{student} yen',f'{adult} yen',f'{adult+student} yen']
+        elif mode==3:
+            adult=r.randrange(500,1001,100); student=r.randrange(200,501,50); n=r.choice([2,3,4])
+            total=2*adult+n*student
+            stem=f'A group buys two adult tickets at {adult} yen each and {n} student tickets at {student} yen each. How much do they pay?'
+            answer=f'{total} yen'; choices=[answer,f'{total+student} yen',f'{total-adult} yen',f'{adult+n*student} yen']
+        elif mode==4:
+            price=r.randrange(300,901,50); count=r.choice([2,3,4]); total=price*count
+            stem=f'Each ticket costs {price} yen. A family buys {count} tickets. What is the total cost?'
+            answer=f'{total} yen'; choices=[answer,f'{total-price} yen',f'{total+price} yen',f'{price+count} yen']
+        else:
+            adult=r.randrange(600,1001,100); discount=r.choice([100,150,200,250]); student=adult-discount
+            count=r.choice([2,3,4]); total=student*count
+            stem=f'An adult ticket costs {adult} yen. A student ticket is {discount} yen cheaper. How much do {count} students pay in total?'
+            answer=f'{total} yen'; choices=[answer,f'{total+discount} yen',f'{total-discount} yen',f'{adult*count} yen']
+        return stem,choices,answer
     if kind == 'relative':
         name=r.choice(['Ken','Emi','Hana','Rina','Yuta','Sota','Mika','Aki'])
         job=r.choice(['teacher','doctor','scientist','artist','engineer','writer','nurse','cook'])
@@ -211,22 +239,59 @@ def question(kind, r):
         wrong=['→'.join(years[i][1] for i in seq) for seq in [(1,0,2),(0,2,1),(2,1,0)]]
         return f'次の3件（{", ".join(x[1] for x in years)}）を古い順に並べると？',[correct]+wrong,correct
     if kind == 'civics':
-        seats=r.randrange(60,451,10)
-        votes=(2*seats+2)//3
-        stem=r.choice([f'衆議院の出席議員{seats}人。法律案再可決に必要な賛成の最少数は？',f'出席議員が{seats}人の衆議院で、法律案を再可決するには最低何人の賛成が必要？'])
-        options=[str(votes),str(seats//2),str(seats//3),str(seats-1)]
-        return stem,options,str(votes)
+        mode=r.randrange(7)
+        if mode==0:
+            seats=r.randrange(60,451,10); votes=(2*seats+2)//3
+            stem=r.choice([f'衆議院の出席議員{seats}人。法律案再可決に必要な賛成の最少数は？',f'出席議員が{seats}人の衆議院で、法律案を再可決するには最低何人の賛成が必要？'])
+            return stem,[str(votes),str(seats//2),str(seats//3),str(seats-1)],str(votes)
+        if mode==1:
+            return '参議院が否決した法律案を衆議院で再可決するには、出席議員の何分の何以上の賛成が必要？',['3分の2以上','過半数','3分の1以上','全員一致'],'3分の2以上'
+        if mode==2:
+            return '日本で司法権を担当する機関はどれですか。',['裁判所','国会','内閣','地方議会'],'裁判所'
+        if mode==3:
+            return '住民が条例の制定・改廃などを求める地方自治の制度は？',['直接請求','国政調査権','違憲審査制','議院内閣制'],'直接請求'
+        if mode==4:
+            return '日本の国政選挙で投票できる年齢は原則何歳以上ですか。',['18歳','16歳','20歳','21歳'],'18歳'
+        if mode==5:
+            return '法律や命令が憲法に違反していないかを裁判所が判断する権限は？',['違憲審査権','国政調査権','条例制定権','予算編成権'],'違憲審査権'
+        return '内閣総理大臣を指名する機関はどれですか。',['国会','最高裁判所','都道府県知事','日本銀行'],'国会'
     if kind == 'population':
         young=r.randrange(9,19); old=r.randrange(22,38); work=100-young-old
         return f'人口構成：15歳未満{young}％、15～64歳{work}％、65歳以上{old}％。最大の層は？',['15～64歳','15歳未満','65歳以上','すべて同じ'],'15～64歳'
     if kind == 'trade':
-        ex=r.randrange(105,155,5); im=r.randrange(60,100,5)
-        return f'輸出指数100→{ex}、輸入指数100→{im}。正しい説明は？',['輸出増・輸入減','両方増加','輸出減・輸入増','両方減少'],'輸出増・輸入減'
+        mode=r.randrange(6)
+        if mode==0:
+            ex=r.randrange(105,155,5); im=r.randrange(60,100,5)
+            return f'輸出指数100→{ex}、輸入指数100→{im}。正しい説明は？',['輸出増・輸入減','両方増加','輸出減・輸入増','両方減少'],'輸出増・輸入減'
+        if mode==1:
+            ex=r.randrange(110,151,5); im=r.randrange(105,146,5)
+            return f'ある年の輸出指数は100から{ex}へ、輸入指数は100から{im}へ変化した。両方について正しい説明は？',['輸出入とも増加','輸出増・輸入減','輸出減・輸入増','両方減少'],'輸出入とも増加'
+        if mode==2:
+            ex=r.randrange(70,96,5); im=r.randrange(105,136,5)
+            return f'輸出指数が100から{ex}に下がり、輸入指数が100から{im}に上がった。どの変化が起きた？',['輸出減・輸入増','輸出増・輸入減','輸出入とも増加','変化なし'],'輸出減・輸入増'
+        if mode==3:
+            ex=r.randrange(120,181,10); im=r.randrange(70,111,10)
+            return f'輸出額の指数が{ex}、輸入額の指数が{im}（基準年はいずれも100）である。基準年と比べた説明は？',['輸出は増え、輸入は減った','輸出は減り、輸入は増えた','輸出入とも減った','輸出入とも変化なし'],'輸出は増え、輸入は減った'
+        if mode==4:
+            exports=r.randrange(120,301,20); imports=exports-r.randrange(20,101,20)
+            return f'ある国の輸出額が{exports}億円、輸入額が{imports}億円だった。貿易収支はどの状態？',['貿易黒字','貿易赤字','必ず均衡','判断できない'],'貿易黒字'
+        return '輸入額が輸出額を上回っている状態を何といいますか。',['貿易赤字','貿易黒字','財政黒字','経常黒字'],'貿易赤字'
     if kind == 'exchange':
-        a=r.choice(list(range(100,181,5)))
-        b=a-r.choice([5,10,15,20,25,30])
-        stem=r.choice([f'為替が1ドル{a}円から{b}円に変化した。これは？',f'1ドルあたり{a}円だった為替相場が{b}円になった。この変化を何という？'])
-        return stem,['円高・ドル安','円安・ドル高','変化なし','必ず物価が2倍'],'円高・ドル安'
+        mode=r.randrange(6)
+        if mode==0:
+            a=r.choice(list(range(100,181,5))); b=a-r.choice([5,10,15,20,25,30])
+            stem=r.choice([f'為替が1ドル{a}円から{b}円に変化した。これは？',f'1ドルあたり{a}円だった為替相場が{b}円になった。この変化を何という？'])
+            return stem,['円高・ドル安','円安・ドル高','変化なし','必ず物価が2倍'],'円高・ドル安'
+        if mode==1:
+            a=r.choice(list(range(100,161,5))); b=a+r.choice([5,10,15,20,25,30])
+            return f'1ドル{a}円から{b}円に変化したとき、円とドルの関係は？',['円安・ドル高','円高・ドル安','変化なし','円とドルが同じ価値'],'円安・ドル高'
+        if mode==2:
+            return '円高が進むと、一般に海外から輸入する商品の円建て価格はどうなりやすいですか。',['安くなりやすい','高くなりやすい','必ず2倍になる','輸入できなくなる'],'安くなりやすい'
+        if mode==3:
+            return '円安が進んだとき、日本から海外旅行に行く人の外貨購入費用は一般にどうなりやすい？',['高くなりやすい','安くなりやすい','必ず無料になる','変化しない'],'高くなりやすい'
+        if mode==4:
+            return '1ドルを買うのに必要な円が120円から100円に減った。この変化は？',['円高','円安','物価上昇だけ','為替変動なし'],'円高'
+        return '円安とは、外国通貨1単位を買うために必要な円が一般にどうなることですか。',['多くなる','少なくなる','ゼロになる','必ず変わらない'],'多くなる'
     if kind == 'disaster':
         settings=[
             ('相模川沿い','flood'),('酒匂川沿い','flood'),('境川沿い','flood'),
@@ -244,8 +309,20 @@ def question(kind, r):
         stem=r.choice([f'{weather}時に{area}で{concern[1]}に備え、ハザードマップで確認すべきことは？',f'{area}の住民が{weather}による{concern[1]}の危険を確認するには、ハザードマップのどこを見る？'])
         return stem,[concern[0],'選挙区','税率','輸出額'],concern[0]
     if kind == 'budget':
-        a=r.randrange(25,38);b=r.randrange(10,20);c=r.randrange(8,16)
-        return f'歳出：社会保障{a}％、教育{b}％、公共事業{c}％。最も大きい項目は？',['社会保障','教育','公共事業','同率'],'社会保障'
+        a=r.randrange(25,38); b=r.randrange(10,20); c=r.randrange(8,16)
+        mode=r.randrange(5)
+        if mode==0:
+            return f'歳出：社会保障{a}％、教育{b}％、公共事業{c}％。最も大きい項目は？',['社会保障','教育','公共事業','同率'],'社会保障'
+        if mode==1:
+            total=a+b
+            return f'歳出のうち社会保障が{a}％、教育が{b}％である。2項目の合計は何％？',[f'{total}％',f'{a-b}％',f'{total+10}％',f'{c}％'],f'{total}％'
+        if mode==2:
+            return f'資料：社会保障{a}％、教育{b}％、公共事業{c}％。最も割合が小さい項目は？',['公共事業','教育','社会保障','すべて同じ'],'公共事業' if c<b and c<a else ('教育' if b<c and b<a else '社会保障')
+        if mode==3:
+            diff=a-b
+            return f'社会保障費の割合は{a}％、教育費は{b}％である。社会保障費は何ポイント高い？',[f'{diff}ポイント',f'{a+b}ポイント',f'{b}ポイント',f'{a}ポイント'],f'{diff}ポイント'
+        total=a+b+c
+        return f'資料の3項目：社会保障{a}％、教育{b}％、公共事業{c}％。合計は何％？',[f'{total}％',f'{a+b}％',f'{total+10}％',f'{a+c}％'],f'{total}％'
     if kind == 'tense':
         name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana','Sota','Aki'])
         activity=r.choice(['the museum','soccer','a letter','dinner','the piano','a book'])
@@ -318,9 +395,31 @@ def question(kind, r):
         stem=r.choice([f'{country}と関連が深い地理的特徴はどれ？',f'世界地理の資料にある{country}の特徴として正しいものは？',f'{country}の自然環境を説明したものはどれ？',f'{country}について、自然や気候の特徴として適切なものは？',f'次のうち{country}に結びつく地理的特色はどれ？',f'{country}の地理に関する説明として正しいものを選びなさい。',f'{country}で見られる自然環境として最も適切なものは？'])
         return stem,[feature,'国土全体が永久凍土に覆われる','季節による気候の変化がない','国土全体が南極海にある'],feature
     if kind == 'map_scale':
-        cm=r.randrange(1,101); km=cm/2
-        good=f'{km:g} km'
-        return f'縮尺1:50,000の地図で2地点が{cm}cm離れている。実際の距離は？',[good,f'{cm*5:g} km',f'{cm/5:g} km',f'{cm*50:g} km'],good
+        mode=r.randrange(6)
+        if mode==0:
+            cm=r.randrange(2,41); scale=50000; km=cm*scale/100000
+            good=f'{km:g} km'
+            return f'縮尺1:{scale:,}の地図で2地点が{cm}cm離れている。実際の距離は？',[good,f'{km*10:g} km',f'{km/5:g} km',f'{km+3:g} km'],good
+        if mode==1:
+            cm=r.randrange(2,41); scale=25000; km=cm*scale/100000
+            good=f'{km:g} km'
+            return f'縮尺1:{scale:,}の地図上で2地点の間が{cm}cmだった。現地での距離は？',[good,f'{km*2:g} km',f'{km/2:g} km',f'{km+5:g} km'],good
+        if mode==2:
+            km=r.choice([1,1.5,2,2.5,3,4,5]); scale=50000; cm=km*100000/scale
+            good=f'{cm:g} cm'
+            return f'縮尺1:{scale:,}の地図で、実際に{km:g}km離れた2地点は地図上で何cm離れる？',[good,f'{cm*2:g} cm',f'{cm+2:g} cm',f'{cm/2:g} cm'],good
+        if mode==3:
+            km=r.choice([1,2,3,4,5]); scale=100000; cm=km*100000/scale
+            good=f'{cm:g} cm'
+            return f'縮尺1:{scale:,}の地図を使う。実際に{km}kmの道のりは地図上で何cm？',[good,f'{cm+3:g} cm',f'{cm*10:g} cm',f'{cm/2:g} cm'],good
+        if mode==4:
+            cm=r.randrange(2,21); meters=cm*250
+            good=f'{meters} m'
+            return f'地図では1cmが実際の250mを表す。地図上で{cm}cmの道のりは実際に何m？',[good,f'{meters+250} m',f'{meters*2} m',f'{cm*25} m'],good
+        cm=r.choice([2,4,5,8,10]); actual_km=r.choice([1,2,2.5,4,5])
+        denominator=int(actual_km*100000/cm)
+        good=f'1:{denominator:,}'
+        return f'地図上で{cm}cmが実際の{actual_km:g}kmに当たる。この地図の縮尺は？',[good,'1:25,000','1:50,000','1:100,000'],good
     if kind == 'population_change':
         total=r.randrange(800,3001,20); group=total//4
         pct=25
@@ -343,9 +442,31 @@ def question(kind, r):
         good='60%'
         return f'有権者{voters}人のうち{cast}人が投票した。投票率は何％？',[good,'40%','75%','80%'],good
     if kind == 'tax':
-        price=r.randrange(500,5001,100); total=price*11//10
-        good=f'{total} yen'
-        return f'税抜き{price}円の商品に消費税10％を加えると、税込み価格はいくら？',[good,f'{price}円',f'{price*2}円',f'{total+500}円'],good
+        mode=r.randrange(6)
+        price=r.randrange(500,5001,100)
+        rate=r.choice([8,10])
+        tax=price*rate//100
+        total=price+tax
+        if mode==0:
+            answer=f'{total}円'
+            return f'税抜き{price}円の商品に消費税{rate}％を加えると、税込み価格はいくら？',[answer,f'{price}円',f'{price*2}円',f'{total+500}円'],answer
+        if mode==1:
+            answer=f'{tax}円'
+            return f'税抜き{price}円の商品に消費税{rate}％をかけると、税額はいくら？',[answer,f'{price}円',f'{total}円',f'{tax+100}円'],answer
+        if mode==2:
+            base=r.randrange(500,5001,100); incl=base*11//10
+            answer=f'{base}円'
+            return f'消費税10％込みで{incl}円の商品がある。税抜き価格はいくら？',[answer,f'{incl}円',f'{base+100}円',f'{base-100}円'],answer
+        if mode==3:
+            base=r.randrange(500,5001,100); discounted=base*8//10; incl=discounted*11//10
+            answer=f'{incl}円'
+            return f'{base}円の商品を20％引きで買い、さらに消費税10％を加えた。支払額はいくら？',[answer,f'{base}円',f'{discounted}円',f'{incl+100}円'],answer
+        if mode==4:
+            p1=r.randrange(600,2001,100); p2=p1+r.randrange(100,501,100)
+            return f'商品Aは税抜き{p1}円、商品Bは税抜き{p2}円。どちらも消費税10％なら、税込み価格が高いのは？',['商品B','商品A','同じ価格','判断できない'],'商品B'
+        p=r.randrange(500,5001,100); t=p*11//10
+        answer=f'{t}円'
+        return f'税抜き価格が{p}円の商品を買う。消費税率10％のとき、レジで払う金額は？',[answer,f'{p}円',f'{t+100}円',f'{p*2}円'],answer
     if kind == 'history_person':
         person,event=r.choice([('聖徳太子','十七条の憲法'),('源頼朝','鎌倉幕府を開いた'),('織田信長','楽市・楽座を進めた'),('伊藤博文','初代内閣総理大臣'),('福沢諭吉','『学問のすゝめ』を著した'),('板垣退助','自由民権運動を進めた'),('ペリー','黒船で来航した')])
         stem=r.choice([f'{person}の業績として正しいものはどれ？',f'歴史上の人物{person}について、正しい説明を選びなさい。',f'{person}と関係の深い出来事・業績はどれ？',f'日本史の人物{person}に関する説明として適切なものは？',f'{person}についての記述で正しいものを選びなさい。',f'次のうち、{person}が行ったことはどれ？',f'{person}に関連する歴史的な事柄はどれ？',f'歴史資料に登場する{person}について答えなさい。',f'{person}の活動を説明したものとして最も適切なのは？',f'人物と業績の組み合わせとして、{person}に当てはまるものは？'])
