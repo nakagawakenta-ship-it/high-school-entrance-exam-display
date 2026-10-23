@@ -649,8 +649,9 @@ def fresh_questions(date, used, recent_templates=None):
     recent_templates=set(recent_templates or ())
     results=[]
     for subject, kinds in [('english',EN),('social',SO)]:
-        shift=(date.toordinal()*3)%len(kinds)
-        selected=[kinds[(shift+i*3)%len(kinds)] for i in range(5)]
+        # Rotate a five-topic window by seven positions so adjacent days do not reuse four of five families.
+        shift=(date.toordinal()*7)%len(kinds)
+        selected=[kinds[(shift+i)%len(kinds)] for i in range(5)]
         for index,kind in enumerate(selected,1):
             for _ in range(10000):
                 q,choices,answer=question(kind,r)
