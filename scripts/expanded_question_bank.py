@@ -11,18 +11,22 @@ def question(kind, r):
         x=r.randrange(130,160); y=x+r.randrange(5,25)
         return f'{a} is {x} cm tall; {b} is {y} cm. Who is taller?',[b,a,'Both','Cannot tell'],b
     if kind == 'dialogue':
-        places=['station','museum','library','aquarium','hospital','city hall','sports center','post office','park','art museum','bus stop','shopping mall']
-        start,dest=r.sample(places,2)
-        name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana','Sota','Aki'])
-        d=r.choice(['turn left','turn right','go straight'])
-        good=f'Please {d}.'
-        stem=r.choice([
-            f'A: How can I get from the {start} to the {dest}? B: ( )',
-            f'A: {name} is at the {start}. How can {name} get to the {dest}? B: ( )',
-            f'A: Excuse me. I am at the {start}. How do I get to the {dest}? B: ( )',
-            f'A: Could you tell me the way from the {start} to the {dest}? B: ( )'
-        ])
-        return stem,[good,'I went there last week.','It opens at nine.','I like reading books.'],good
+        scenarios=[
+            ("A: I am sorry I am late. B: ( )",["That is all right.","You are welcome.","See you tomorrow.","Here is your ticket."],"That is all right."),
+            ("A: Thank you for helping me. B: ( )",["You are welcome.","I am twelve years old.","It is Monday.","I went there yesterday."],"You are welcome."),
+            ("A: I am going to give a speech tomorrow. B: ( )",["Good luck!","You are welcome.","That is mine.","I went yesterday."],"Good luck!"),
+            ("A: Why do not we clean the beach on Sunday? B: ( )",["That sounds good.","It is blue.","I cannot find it.","Here you are."],"That sounds good."),
+            ("A: May I use your pen? B: ( )",["Of course.","I used it yesterday.","It is Monday.","You are welcome."],"Of course."),
+            ("A: Would you like some tea? B: ( )",["Yes, please.","At the station.","For three years.","See you yesterday."],"Yes, please."),
+            ("A: I have a headache. B: ( )",["You should get some rest.","You are welcome.","It is ten o clock.","I like baseball."],"You should get some rest."),
+            ("A: Could you open the window? B: ( )",["Certainly.","I opened it yesterday.","It is a window.","No, I am not."],"Certainly."),
+            ("A: What do you think of this book? B: ( )",["I think it is interesting.","It costs five minutes.","I bought it tomorrow.","You are welcome."],"I think it is interesting."),
+            ("A: I cannot find my notebook. B: ( )",["Let us look for it together.","You are welcome.","It was sunny.","I am good at math."],"Let us look for it together."),
+            ("A: How was your school trip? B: ( )",["It was a lot of fun.","At six o clock.","For three years.","I am going to school."],"It was a lot of fun."),
+            ("A: Could you tell me the time? B: ( )",["It is half past three.","At the library.","I am thirteen years old.","You are welcome."],"It is half past three.")
+        ]
+        stem, choices, answer = r.choice(scenarios)
+        return stem, choices, answer
     if kind == 'reading':
         name=r.choice(['Mika','Ken','Yuta','Hana','Emi','Rina','Sota','Aki'])
         p,reason=r.choice([('library','study for a test'),('museum','learn history'),('park','join a cleanup'),('station','meet a friend'),('shop','buy a gift'),('community center','practice music'),('beach','collect trash'),('science museum','see an exhibition'),('bookstore','buy a dictionary'),('gym','play basketball')])
@@ -41,7 +45,8 @@ def question(kind, r):
         name=r.choice(['Ken','Emi','Hana','Rina','Yuta','Sota','Mika','Aki'])
         job=r.choice(['teacher','doctor','scientist','artist','engineer','writer','nurse','cook'])
         city=r.choice(['Yokohama','Kamakura','Fujisawa','Odawara','Kawasaki','Sagamihara','Chigasaki'])
-        return f'{name} knows a {job} ( ) works in {city}.',['who','where','when','whose'],'who'
+        article = 'an' if job[0].lower() in 'aeiou' else 'a'
+        return f'{name} knows {article} {job} ( ) works in {city}.',['who','where','when','whose'],'who'
     if kind == 'passive':
         name=r.choice(['bridge','school','museum','library','station'])
         year=r.randrange(1980,2020)
@@ -66,10 +71,16 @@ def question(kind, r):
             place,feature=r.choice([('横浜港','貿易港として発達'),('箱根','火山地形と温泉'),('相模原台地','関東ローム層が広がる台地'),('三浦半島','海岸線が複雑で漁業も行われる'),('丹沢山地','山地が広がり森林が多い'),('湘南海岸','海水浴場や観光で知られる')])
             return f'神奈川県の{place}の特徴として適切なものは？',[feature,'大規模な砂漠が広がる','一年中永久凍土に覆われる','標高がすべて海面以下'],feature
         if mode==2:
-            climate=r.choice([('太平洋側','冬に晴天が多く乾燥しやすい'),('日本海側','冬に雪や雨が多い'),('瀬戸内','降水量が比較的少ない'),('中央高地','内陸で年較差が大きい'),('北海道','冷涼で梅雨の影響が比較的小さい'),('南西諸島','一年を通じて温暖で台風の影響を受けやすい'),('東北地方','冬の寒さが厳しく、日本海側では雪が多い'),('南四国','黒潮の影響を受け温暖で降水量が多い')])
-            stem=r.choice([f'日本の気候区分で「{climate[0]}」の特徴は？',f'「{climate[1]}」という気候の特徴がみられる地域は？'])
-            options=[climate[1],'一年中ほぼ毎日同じ量の雨が降る','年間を通じて気温が常に30℃を超える','冬でも必ず台風が上陸する']
-            return stem,options,climate[1]
+            climates=[('太平洋側','冬に晴天が多く乾燥しやすい'),('日本海側','冬に雪や雨が多い'),('瀬戸内','降水量が比較的少ない'),('中央高地','内陸で年較差が大きい'),('北海道','冷涼で梅雨の影響が比較的小さい'),('南西諸島','一年を通じて温暖で台風の影響を受けやすい'),('東北地方','冬の寒さが厳しく、日本海側では雪が多い'),('南四国','黒潮の影響を受け温暖で降水量が多い')]
+            climate=r.choice(climates)
+            if r.choice([True,False]):
+                stem=f'日本の気候区分で「{climate[0]}」の特徴は？'
+                options=[climate[1],'一年中ほぼ毎日同じ量の雨が降る','年間を通じて気温が常に30℃を超える','冬でも必ず台風が上陸する']
+                return stem,options,climate[1]
+            stem=f'「{climate[1]}」という特徴がみられる地域は？'
+            regions=[x[0] for x in climates if x[0]!=climate[0]]
+            options=[climate[0]]+r.sample(regions,3)
+            return stem,options,climate[0]
         if mode==3:
             crops=[('北海道','てんさい'),('新潟平野','米'),('高知平野','促成栽培の野菜'),('鹿児島','畜産'),('長野県','高原野菜'),('沖縄県','さとうきび'),('青森県','りんご'),('山梨県','ぶどう'),('静岡県','茶'),('群馬県','こんにゃくいも'),('千葉県','落花生'),('愛媛県','みかん'),('熊本県','すいか'),('宮崎県','きゅうりの促成栽培'),('北海道十勝地方','大規模な畑作'),('三重県','養殖真珠'),('広島県','かきの養殖'),('富山平野','米'),('鳥取県','らっきょう'),('福井県','米'),('岩手県','肉用牛'),('和歌山県','うめ'),('栃木県','いちご'),('茨城県','れんこん'),('佐賀平野','米'),('徳島県','すだち'),('長崎県','じゃがいも'),('奈良県','柿'),('福岡県','いちご'),('石川県','米')]
             crop=r.choice(crops)
@@ -167,10 +178,20 @@ def question(kind, r):
         stem=r.choice([f'為替が1ドル{a}円から{b}円に変化した。これは？',f'1ドルあたり{a}円だった為替相場が{b}円になった。この変化を何という？'])
         return stem,['円高・ドル安','円安・ドル高','変化なし','必ず物価が2倍'],'円高・ドル安'
     if kind == 'disaster':
-        area=r.choice(['相模川沿い','酒匂川沿い','境川沿い','鶴見川沿い','多摩川沿い','海岸近く','急傾斜地の近く','山間部'])
+        settings=[
+            ('相模川沿い','flood'),('酒匂川沿い','flood'),('境川沿い','flood'),
+            ('鶴見川沿い','flood'),('多摩川沿い','flood'),('河口付近の低地','flood'),
+            ('海岸近く','coastal'),('急傾斜地の近く','landslide'),('山間部','landslide')
+        ]
+        area,hazard=r.choice(settings)
         weather=r.choice(['台風','大雨','長雨','線状降水帯による豪雨','大雨と満潮'])
-        concern=r.choice([('浸水区域と避難場所','洪水'),('土砂災害警戒区域と避難経路','土砂災害')])
-        stem=r.choice([f'{weather}時に{area}で{concern[1]}に備え、ハザードマップで確認すべきことは？',f'{area}の住民が{weather}により{concern[1]}の危険を確認するには、ハザードマップのどこを見る？'])
+        if hazard=='landslide':
+            concern=('土砂災害警戒区域と避難経路','土砂災害')
+        elif hazard=='coastal':
+            concern=('高潮・浸水の想定区域と避難場所','高潮や浸水')
+        else:
+            concern=('浸水想定区域と避難場所','洪水')
+        stem=r.choice([f'{weather}時に{area}で{concern[1]}に備え、ハザードマップで確認すべきことは？',f'{area}の住民が{weather}による{concern[1]}の危険を確認するには、ハザードマップのどこを見る？'])
         return stem,[concern[0],'選挙区','税率','輸出額'],concern[0]
     if kind == 'budget':
         a=r.randrange(25,38);b=r.randrange(10,20);c=r.randrange(8,16)
@@ -186,7 +207,7 @@ def question(kind, r):
         a,b=r.choice([('It was raining','we stayed home'),('Mika was tired','she went to bed early'),('Ken studied hard','he passed the test'),('The bag was heavy','I carried it carefully')])
         good=r.choice(['so','because','although','unless'])
         if good=='because':
-            stem=f'{b.capitalize()} ( ) {a.lower()}.'
+            stem=f'{b.capitalize()} ( ) {a}.'
             answer='because'
         elif good=='although':
             stem=f'( ) it was difficult, Ken finished the work.'
