@@ -11,22 +11,72 @@ def question(kind, r):
         x=r.randrange(130,160); y=x+r.randrange(5,25)
         return f'{a} is {x} cm tall; {b} is {y} cm. Who is taller?',[b,a,'Both','Cannot tell'],b
     if kind == 'dialogue':
+        name=r.choice(['Mika','Ken','Yuta','Rina','Emi','Hana','Sota','Aki'])
         scenarios=[
-            ("A: I am sorry I am late. B: ( )",["That is all right.","You are welcome.","See you tomorrow.","Here is your ticket."],"That is all right."),
-            ("A: Thank you for helping me. B: ( )",["You are welcome.","I am twelve years old.","It is Monday.","I went there yesterday."],"You are welcome."),
-            ("A: I am going to give a speech tomorrow. B: ( )",["Good luck!","You are welcome.","That is mine.","I went yesterday."],"Good luck!"),
-            ("A: Why do not we clean the beach on Sunday? B: ( )",["That sounds good.","It is blue.","I cannot find it.","Here you are."],"That sounds good."),
-            ("A: May I use your pen? B: ( )",["Of course.","I used it yesterday.","It is Monday.","You are welcome."],"Of course."),
-            ("A: Would you like some tea? B: ( )",["Yes, please.","At the station.","For three years.","See you yesterday."],"Yes, please."),
-            ("A: I have a headache. B: ( )",["You should get some rest.","You are welcome.","It is ten o clock.","I like baseball."],"You should get some rest."),
-            ("A: Could you open the window? B: ( )",["Certainly.","I opened it yesterday.","It is a window.","No, I am not."],"Certainly."),
-            ("A: What do you think of this book? B: ( )",["I think it is interesting.","It costs five minutes.","I bought it tomorrow.","You are welcome."],"I think it is interesting."),
-            ("A: I cannot find my notebook. B: ( )",["Let us look for it together.","You are welcome.","It was sunny.","I am good at math."],"Let us look for it together."),
-            ("A: How was your school trip? B: ( )",["It was a lot of fun.","At six o clock.","For three years.","I am going to school."],"It was a lot of fun."),
-            ("A: Could you tell me the time? B: ( )",["It is half past three.","At the library.","I am thirteen years old.","You are welcome."],"It is half past three.")
+            ("A: I am sorry I am late, {name}. B: ( )","That is all right.",["You are welcome.","See you tomorrow.","Here is your ticket."]),
+            ("A: Thank you for helping me, {name}. B: ( )","You are welcome.",["I am sorry to hear that.","Good luck yesterday.","Here you are."]),
+            ("A: I am going to give a speech tomorrow. B: ( )","Good luck!",["You are welcome.","That is mine.","I went yesterday."]),
+            ("A: Why do not we clean the beach on Sunday? B: ( )","That sounds good.",["It is blue.","I cannot find it.","Here you are."]),
+            ("A: May I use your pen? B: ( )","Of course.",["I used it yesterday.","It is Monday.","You are welcome."]),
+            ("A: Would you like some tea? B: ( )","Yes, please.",["At the station.","For three years.","See you yesterday."]),
+            ("A: I have a headache. B: ( )","You should get some rest.",["You are welcome.","It is ten o clock.","I like baseball."]),
+            ("A: Could you open the window? B: ( )","Certainly.",["I opened it yesterday.","It is a window.","No, I am not."]),
+            ("A: What do you think of this book? B: ( )","I think it is interesting.",["It costs five minutes.","I bought it tomorrow.","You are welcome."]),
+            ("A: I cannot find my notebook. B: ( )","Let us look for it together.",["You are welcome.","It was sunny.","I am good at math."]),
+            ("A: How was your school trip? B: ( )","It was a lot of fun.",["At six o clock.","For three years.","I am going to school."]),
+            ("A: Could you tell me the time? B: ( )","It is half past three.",["At the library.","I am thirteen years old.","You are welcome."]),
+            ("A: I lost my wallet, {name}. B: ( )","I am sorry to hear that.",["Congratulations!","You are welcome.","At half past five."]),
+            ("A: I passed the entrance exam! B: ( )","Congratulations!",["I am sorry to hear that.","You are welcome.","It is next to the bank."]),
+            ("A: I am going to visit Kyoto this weekend. B: ( )","Have a nice trip!",["You are welcome.","I am sorry to hear that.","It is ten yen."]),
+            ("A: I finished my homework, {name}. B: ( )","Well done!",["I am sorry to hear that.","Here is your ticket.","At seven o clock."]),
+            ("A: Would you like to join our study group? B: ( )","Yes, I would love to.",["I went there last week.","It is very expensive.","You are welcome."]),
+            ("A: How about playing badminton after school? B: ( )","Sounds fun.",["I am sorry to hear that.","It is on the desk.","I have two sisters."]),
+            ("A: I do not understand this math problem. B: ( )","Let me help you.",["You are welcome.","It was yesterday.","I am thirteen years old."]),
+            ("A: Could you carry this box for me? B: ( )","Sure, no problem.",["I am sorry to hear that.","It costs five minutes.","See you last week."]),
+            ("A: Can I borrow your umbrella, {name}? B: ( )","Sure. Here you are.",["You are welcome.","I went there yesterday.","It is half past three."]),
+            ("A: My phone battery is dead. B: ( )","You can use my charger.",["Congratulations!","I am thirteen years old.","You are welcome."]),
+            ("A: I missed the bus this morning. B: ( )","That is too bad.",["You are welcome.","Here is your ticket.","I like reading books."]),
+            ("A: It is very hot outside. B: ( )","Let us get some cold water.",["I am sorry to hear that.","It is on Monday.","You are welcome."]),
+            ("A: I want to visit the science museum. B: ( )","That sounds interesting.",["I am sorry to hear that.","At six o clock.","You are welcome."]),
+            ("A: Shall we meet at the library at three? B: ( )","Okay, see you then.",["I am sorry to hear that.","It costs five minutes.","You are welcome."]),
+            ("A: Thank you for inviting me, {name}. B: ( )","I am glad you can come.",["I am sorry to hear that.","At the station.","I went yesterday."]),
+            ("A: I am nervous about my interview. B: ( )","Just do your best.",["You are welcome.","It is next Tuesday.","I am sorry I am late."]),
+            ("A: I got a new puppy yesterday. B: ( )","How nice!",["I am sorry to hear that.","You are welcome.","It is half past three."]),
+            ("A: I do not feel well today. B: ( )","You should tell your teacher.",["Congratulations!","I bought it tomorrow.","You are welcome."]),
+            ("A: Could you repeat that, please? B: ( )","Sure, I will say it again.",["I am sorry to hear that.","At the bus stop.","You are welcome."]),
+            ("A: I forgot to bring my homework. B: ( )","Please talk to your teacher.",["Congratulations!","It costs five minutes.","You are welcome."]),
+            ("A: Would you like to join us for lunch? B: ( )","Yes, I would like to.",["I am sorry to hear that.","At six o clock.","I went there yesterday."]),
+            ("A: I won the tennis match! B: ( )","Congratulations!",["I am sorry to hear that.","You are welcome.","It is under the desk."]),
+            ("A: The movie was great. B: ( )","I am glad you enjoyed it.",["I am sorry to hear that.","At seven o clock.","You are welcome."]),
+            ("A: It is my birthday today. B: ( )","Happy birthday!",["I am sorry to hear that.","You are welcome.","It is on the desk."]),
+            ("A: I cannot come to your party. B: ( )","I am sorry to hear that.",["Congratulations!","You are welcome.","It is half past three."]),
+            ("A: I am going to the dentist tomorrow. B: ( )","I hope it goes well.",["You are welcome.","At the station.","I went there yesterday."]),
+            ("A: What do you want to be in the future? B: ( )","I want to be a nurse.",["At six o clock.","For three years.","You are welcome."]),
+            ("A: How long have you lived here? B: ( )","For five years.",["At the station.","It is ten yen.","I went there tomorrow."]),
+            ("A: Which do you prefer, tea or coffee? B: ( )","I prefer tea.",["At half past three.","You are welcome.","I am sorry to hear that."]),
+            ("A: Can I sit here? B: ( )","Yes, this seat is free.",["I am sorry to hear that.","It is five years old.","You are welcome."]),
+            ("A: Thank you for your advice, {name}. B: ( )","You are welcome.",["Congratulations!","At the station.","I am sorry I am late."]),
+            ("A: I am sorry I broke your ruler. B: ( )","Do not worry about it.",["Congratulations!","At six o clock.","You are welcome."]),
+            ("A: I am hungry. B: ( )","Let us have lunch.",["I am sorry to hear that.","It is on the desk.","You are welcome."]),
+            ("A: Let us take a walk after dinner. B: ( )","Good idea.",["I am sorry to hear that.","At the station.","You are welcome."]),
+            ("A: How was the concert last night? B: ( )","It was amazing.",["At six o clock.","For three years.","You are welcome."]),
+            ("A: I need to study for the exam. B: ( )","I can help you review.",["I am sorry to hear that.","It costs five minutes.","You are welcome."]),
+            ("A: I am looking for a gift for my sister. B: ( )","How about a book?",["I am sorry to hear that.","At seven o clock.","You are welcome."]),
+            ("A: I have never been to Hokkaido. B: ( )","You should visit it someday.",["I am sorry to hear that.","It is ten yen.","You are welcome."]),
+            ("A: Would you like to play soccer after school? B: ( )","Sure, I would love to.",["I am sorry to hear that.","At the station.","You are welcome."]),
+            ("A: Thank you for showing me the way. B: ( )","No problem.",["I am sorry to hear that.","It is Monday.","Congratulations!"]),
+            ("A: I do not know how to use this app. B: ( )","Let me show you.",["You are welcome.","It is half past three.","I went there yesterday."]),
+            ("A: I am sorry for the noise, {name}. B: ( )","Do not worry about it.",["Congratulations!","At the station.","You are welcome."]),
+            ("A: Can you help me with this question? B: ( )","Of course. Let us try it together.",["I am sorry to hear that.","At six o clock.","You are welcome."]),
+            ("A: I am going to visit my grandparents this weekend. B: ( )","Have a nice time!",["I am sorry to hear that.","It is on the desk.","You are welcome."]),
+            ("A: I have a cold today. B: ( )","I hope you feel better soon.",["Congratulations!","At the station.","You are welcome."]),
+            ("A: I missed the train, {name}. B: ( )","That is too bad.",["Congratulations!","You are welcome.","It is ten yen."]),
+            ("A: I need a dictionary for class. B: ( )","You can borrow mine.",["I am sorry to hear that.","At seven o clock.","Congratulations!"]),
+            ("A: Do you have any plans for the weekend? B: ( )","I am going to visit my cousin.",["At half past three.","You are welcome.","It is ten yen."])
         ]
-        stem, choices, answer = r.choice(scenarios)
-        return stem, choices, answer
+        stem, answer, wrong = r.choice(scenarios)
+        stem = stem.format(name=name)
+        return stem,[answer]+wrong,answer
     if kind == 'reading':
         name=r.choice(['Mika','Ken','Yuta','Hana','Emi','Rina','Sota','Aki'])
         p,reason=r.choice([('library','study for a test'),('museum','learn history'),('park','join a cleanup'),('station','meet a friend'),('shop','buy a gift'),('community center','practice music'),('beach','collect trash'),('science museum','see an exhibition'),('bookstore','buy a dictionary'),('gym','play basketball')])
