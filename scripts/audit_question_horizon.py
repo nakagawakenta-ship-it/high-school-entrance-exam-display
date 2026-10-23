@@ -264,3 +264,5 @@ print(json.dumps({
 }, ensure_ascii=False, indent=2))
 if result["errors"] or result["exact_duplicate_groups"] or result["history_duplicate_groups"]:
     sys.exit(1)
+
+# Re-run the audit after the 2026-10-24 validated horizon regeneration.
