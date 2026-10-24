@@ -161,6 +161,22 @@ for d in sorted(canonical):
                 "date": d.isoformat(), "question": question,
                 "warning": "article before a vowel sound should be checked (e.g. an engineer/an artist)"
             })
+        if subject == "english" and re.match(r"^[a-z]", question):
+            result["content_warnings"].append({
+                "date": d.isoformat(), "question": question,
+                "warning": "English question starts with a lowercase letter"
+            })
+        if subject == "english" and topic == "pronoun":
+            if re.search(r"\\b(?:tickets|photos)\\b", question, re.I) and re.search(r"\\b(?:gave|sent) it to", question, re.I):
+                result["content_warnings"].append({
+                    "date": d.isoformat(), "question": question,
+                    "warning": "plural object is incorrectly referred to as 'it'"
+                })
+            if re.search(r"\\bour teacher\\b", question, re.I) and str(answer) in ("him", "her"):
+                result["content_warnings"].append({
+                    "date": d.isoformat(), "question": question,
+                    "warning": "teacher gender is unspecified but answer requires him/her"
+                })
         if subject == "english" and re.search(r"(how can .*get to|how do i get to|way from)", question, re.I):
             if re.search(r"(turn left|turn right|go straight)", str(answer), re.I) and not re.search(r"(map|street|corner|traffic light|on your left|on your right|opposite)", question, re.I):
                 result["content_warnings"].append({
