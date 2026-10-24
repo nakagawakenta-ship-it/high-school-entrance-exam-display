@@ -484,9 +484,11 @@ def question(kind, r):
             return 'I have a lot of homework ( ) tonight.',['to do','doing','do','did'],'to do'
         return 'She was happy ( ) you again.',['to see','seeing','saw','see'],'to see'
     if kind == 'pronoun':
-        name,answer=r.choice([('Tom','him'),('Yuki','her'),('the children','them'),('my brother','him'),('my sister','her'),('Aki','him'),('Mika','her'),('the players','them'),('our teacher','him'),('the visitors','them'),('my aunt','her'),('the students','them')])
-        obj=r.choice(['the present','the book','the message','the tickets','the photos','the invitation','the key','the homework'])
-        stem=r.choice([f'I gave {obj} to {name}. I gave it to ( ).',f'{name} needed {obj}, so I gave it to ( ).',f'I sent {obj} to {name}. I sent it to ( ).'])
+        name,answer=r.choice([('Tom','him'),('Mary','her'),('the children','them'),('my brother','him'),('my sister','her'),('Mr. Sato','him'),('Ms. Sato','her'),('the players','them'),('the visitors','them'),('my aunt','her'),('the students','them')])
+        # The object referred to by "it" must be singular or uncountable.
+        obj=r.choice(['the present','the book','the message','the invitation','the key','the homework'])
+        sentence_name=name[0].upper()+name[1:]
+        stem=r.choice([f'I gave {obj} to {name}. I gave it to ( ).',f'{sentence_name} needed {obj}, so I gave it to ( ).',f'I sent {obj} to {name}. I sent it to ( ).'])
         return stem,[answer,'he' if answer=='him' else 'she' if answer=='her' else 'they','his','themselves'],answer
     if kind == 'preposition':
         place=r.choice(['the station','the library','the airport','school','the museum','the hospital','the park','the city hall'])
