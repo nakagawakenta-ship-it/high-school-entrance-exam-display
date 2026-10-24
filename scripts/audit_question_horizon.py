@@ -183,6 +183,22 @@ for d in sorted(canonical):
                     "date": d.isoformat(), "question": question,
                     "warning": "question asks for a region but answer appears to be a climate feature"
                 })
+            if topic == "population_change":
+                match = re.search(r"人口は(\\d+)人から(\\d+)人に減った。人口減少率は何％", question)
+                answer_match = re.fullmatch(r"\\s*(\\d+)\\s*%\\s*", str(answer))
+                if match and answer_match:
+                    before, after = map(int, match.groups())
+                    numerator = (before - after) * 100
+                    if before <= 0 or after < 0 or after >= before or numerator % before != 0 or int(answer_match.group(1)) != numerator // before:
+                        result["content_warnings"].append({
+                            "date": d.isoformat(), "question": question,
+                            "warning": "population decrease percentage is not an exact, correctly calculated value"
+                        })
+            if topic == "history_person" and answer == "鎌倉幕府を開いた" and any(re.search(r"1192年.*幕府", str(choice)) for choice in choices):
+                result["content_warnings"].append({
+                    "date": d.isoformat(), "question": question,
+                    "warning": "a distractor repeats the correct Minamoto no Yoritomo achievement"
+                })
 
 # Exact duplicates within the horizon; same-date daily/prepared copies are not both counted.
 by_exact = defaultdict(list)
@@ -262,7 +278,7 @@ print(json.dumps({
     "content_warning_count": result["content_warning_count"],
     "errors": result["errors"][:20]
 }, ensure_ascii=False, indent=2))
-if result["errors"] or result["exact_duplicate_groups"] or result["history_duplicate_groups"]:
+if result["errors"] or result["exact_duplicate_groups"] or result["history_duplicate_groups"] or result["content_warnings"]:
     sys.exit(1)
 
 # Re-run the audit after the 2026-10-24 validated horizon regeneration.
