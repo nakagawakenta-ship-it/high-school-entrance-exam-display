@@ -562,8 +562,12 @@ def question(kind, r):
             total=r.randrange(1000,5001,100); pct=r.choice([10,15,20,30]); children=total*pct//100
             return f'人口{total}人の市で子どもが全体の{pct}％を占める。子どもは何人？',[str(children),str(children+100),str(total//2),str(total-children)],str(children)
         if mode==2:
-            before=r.randrange(1000,5001,100); after=before-r.choice([100,200,300,400,500]); pct=(before-after)*100//before
-            return f'ある町の人口は{before}人から{after}人に減った。人口減少率は何％？',[f'{pct}%',f'{pct+10}%',f'{pct-5}%',f'{100-pct}%'],f'{pct}%'
+            before=r.choice([1000,2000,5000]); after=before-r.choice([100,200,300,400,500]); pct=(before-after)*100//before
+            answer=f'{pct}%'
+            plausible=[2,4,5,6,8,10,12,15,20,25,30,35,40,45,50]
+            distractors=[f'{value}%' for value in plausible if value != pct]
+            choices=[answer]+r.sample(distractors,3)
+            return f'ある町の人口は{before}人から{after}人に減った。人口減少率は何％？',choices,answer
         before=r.randrange(1000,5001,100); after=before+before//5
         return f'人口が{before}人から{after}人に増えた。増加した人数は？',[str(after-before),str(after),str(before//5+100),str(before-after)],str(after-before)
     if kind == 'industry':
@@ -621,7 +625,7 @@ def question(kind, r):
     if kind == 'history_person':
         person,event=r.choice([('聖徳太子','十七条の憲法'),('源頼朝','鎌倉幕府を開いた'),('織田信長','楽市・楽座を進めた'),('伊藤博文','初代内閣総理大臣'),('福沢諭吉','『学問のすゝめ』を著した'),('板垣退助','自由民権運動を進めた'),('ペリー','黒船で来航した')])
         stem=r.choice([f'{person}の業績として正しいものはどれ？',f'歴史上の人物{person}について、正しい説明を選びなさい。',f'{person}と関係の深い出来事・業績はどれ？',f'日本史の人物{person}に関する説明として適切なものは？',f'{person}についての記述で正しいものを選びなさい。',f'次のうち、{person}が行ったことはどれ？',f'{person}に関連する歴史的な事柄はどれ？',f'歴史資料に登場する{person}について答えなさい。',f'{person}の活動を説明したものとして最も適切なのは？',f'人物と業績の組み合わせとして、{person}に当てはまるものは？'])
-        return stem,[event,'大日本帝国憲法を廃止した','元寇を指揮した','1192年に最初の幕府を開いた'],event
+        return stem,[event,'大日本帝国憲法を廃止した','元寇を指揮した','江戸幕府を開いた'],event
     if kind == 'map_direction':
         stem,answer,wrong=r.choice([
             ('地図で、北を上にしたとき東はどの方向？','右',['左','上','下']),
