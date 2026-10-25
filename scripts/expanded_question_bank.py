@@ -248,7 +248,8 @@ def question(kind, r):
             crops=[('北海道','てんさい'),('新潟平野','米'),('高知平野','促成栽培の野菜'),('鹿児島','畜産'),('長野県','高原野菜'),('沖縄県','さとうきび'),('青森県','りんご'),('山梨県','ぶどう'),('静岡県','茶'),('三重県','茶'),('群馬県','こんにゃくいも'),('千葉県','落花生'),('愛媛県','みかん'),('熊本県','すいか'),('宮崎県','きゅうりの促成栽培'),('北海道十勝地方','大規模な畑作'),('三重県','養殖真珠'),('広島県','かきの養殖'),('富山平野','米'),('鳥取県','らっきょう'),('福井県','米'),('岩手県','肉用牛'),('和歌山県','うめ'),('栃木県','いちご'),('茨城県','れんこん'),('佐賀平野','米'),('徳島県','すだち'),('長崎県','じゃがいも'),('奈良県','柿'),('福岡県','いちご'),('石川県','米')]
             crop=r.choice(crops)
             stem=r.choice([f'「{crop[1]}」の生産がさかんな地域はどこ？',f'農業の地域差について、「{crop[1]}」と結びつきが強い地域を選びなさい。'])
-            distractors=[x[0] for x in crops if x[0]!=crop[0] and x[1]!=crop[1]]
+            same_feature_areas={area for area,feature in crops if feature==crop[1]}
+            distractors=list(dict.fromkeys(area for area,feature in crops if area!=crop[0] and area not in same_feature_areas))
             options=[crop[0]]+r.sample(distractors,3)
             return stem,options,crop[0]
         if mode==4:
