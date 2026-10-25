@@ -9,10 +9,16 @@ on:
   schedule:
     - cron: '10 21 * * *' # 06:10 JST
   workflow_dispatch:
+  workflow_run:
+    workflows:
+      - Prepare exam questions through February 2027
+    types:
+      - completed
 permissions:
   contents: read
 jobs:
   audit:
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

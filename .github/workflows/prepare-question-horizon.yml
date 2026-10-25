@@ -48,6 +48,8 @@ jobs:
           python-version: '3.13'
       - name: Generate and validate all future days
         run: python scripts/prepare_question_horizon.py
+      - name: Audit generated horizon before committing
+        run: python scripts/audit_question_horizon.py
       - name: Commit validated question bank
         run: |
           git config user.name "github-actions[bot]"
