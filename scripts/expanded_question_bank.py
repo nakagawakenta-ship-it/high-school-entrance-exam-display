@@ -403,14 +403,16 @@ def question(kind, r):
             ('海岸近く','coastal'),('急傾斜地の近く','landslide'),('山間部','landslide')
         ]
         area,hazard=r.choice(settings)
-        weather=r.choice(['台風','大雨','長雨','線状降水帯による豪雨','大雨と満潮'])
-        if hazard=='landslide':
-            concern=('土砂災害警戒区域と避難経路','土砂災害')
-        elif hazard=='coastal':
+        if hazard=='coastal':
             concern=('高潮・浸水の想定区域と避難場所','高潮や浸水')
+            stem=r.choice([f'台風の接近時に{area}で{concern[1]}に備え、ハザードマップで確認すべきことは？',f'{area}の住民が台風による{concern[1]}の危険を確認するには、ハザードマップのどこを見る？'])
         else:
-            concern=('浸水想定区域と避難場所','洪水')
-        stem=r.choice([f'{weather}時に{area}で{concern[1]}に備え、ハザードマップで確認すべきことは？',f'{area}の住民が{weather}による{concern[1]}の危険を確認するには、ハザードマップのどこを見る？'])
+            weather=r.choice(['台風','大雨','長雨','線状降水帯による豪雨','大雨と満潮'] if hazard=='flood' else ['大雨','長雨','線状降水帯による豪雨'])
+            if hazard=='landslide':
+                concern=('土砂災害警戒区域と避難経路','土砂災害')
+            else:
+                concern=('浸水想定区域と避難場所','洪水')
+            stem=r.choice([f'{weather}時に{area}で{concern[1]}に備え、ハザードマップで確認すべきことは？',f'{area}の住民が{weather}による{concern[1]}の危険を確認するには、ハザードマップのどこを見る？'])
         return stem,[concern[0],'選挙区','税率','輸出額'],concern[0]
     if kind == 'budget':
         a=r.randrange(25,38); b=r.randrange(10,20); c=r.randrange(8,16)

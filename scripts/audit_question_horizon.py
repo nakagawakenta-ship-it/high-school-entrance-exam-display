@@ -167,12 +167,12 @@ for d in sorted(canonical):
                 "warning": "English question starts with a lowercase letter"
             })
         if subject == "english" and topic == "pronoun":
-            if re.search(r"\\b(?:tickets|photos)\\b", question, re.I) and re.search(r"\\b(?:gave|sent) it to", question, re.I):
+            if re.search(r"\b(?:tickets|photos)\b", question, re.I) and re.search(r"\b(?:gave|sent) it to", question, re.I):
                 result["content_warnings"].append({
                     "date": d.isoformat(), "question": question,
                     "warning": "plural object is incorrectly referred to as 'it'"
                 })
-            if re.search(r"\\bour teacher\\b", question, re.I) and str(answer) in ("him", "her"):
+            if re.search(r"\bour teacher\b", question, re.I) and str(answer) in ("him", "her"):
                 result["content_warnings"].append({
                     "date": d.isoformat(), "question": question,
                     "warning": "teacher gender is unspecified but answer requires him/her"
@@ -184,6 +184,11 @@ for d in sorted(canonical):
                     "warning": "route direction is not supported by a map or route clue"
                 })
         if subject == "social":
+            if re.search(r"(?:海岸|沿岸).*(?:長雨|長期間の雨).*(?:高潮|高波)|長雨による高潮", question):
+                result["content_warnings"].append({
+                    "date": d.isoformat(), "question": question,
+                    "warning": "prolonged rain is incorrectly presented as the cause of storm surge"
+                })
             if re.search(r"(急傾斜地|山間部)", question) and re.search(r"(洪水|浸水|高潮)", str(answer)):
                 result["content_warnings"].append({
                     "date": d.isoformat(), "question": question,
@@ -200,8 +205,8 @@ for d in sorted(canonical):
                     "warning": "question asks for a region but answer appears to be a climate feature"
                 })
             if topic == "population_change":
-                match = re.search(r"人口は(\\d+)人から(\\d+)人に減った。人口減少率は何％", question)
-                answer_match = re.fullmatch(r"\\s*(\\d+)\\s*%\\s*", str(answer))
+                match = re.search(r"人口は(\d+)人から(\d+)人に減った。人口減少率は何％", question)
+                answer_match = re.fullmatch(r"\s*(\d+)\s*%\s*", str(answer))
                 if match and answer_match:
                     before, after = map(int, match.groups())
                     numerator = (before - after) * 100
@@ -292,6 +297,7 @@ print(json.dumps({
     "template_duplicate_group_count": result["template_duplicate_group_count"],
     "near_duplicate_pair_count": result["near_duplicate_pair_count"],
     "content_warning_count": result["content_warning_count"],
+    "quality_status": "review" if result["template_duplicate_group_count"] or result["near_duplicate_pair_count"] else "pass",
     "errors": result["errors"][:20]
 }, ensure_ascii=False, indent=2))
 if result["errors"] or result["exact_duplicate_groups"] or result["history_duplicate_groups"] or result["content_warnings"]:
