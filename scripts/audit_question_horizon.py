@@ -184,6 +184,11 @@ for d in sorted(canonical):
                     "warning": "route direction is not supported by a map or route clue"
                 })
         if subject == "social":
+            if "茶" in question and "静岡県" in choices and "三重県" in choices:
+                result["content_warnings"].append({
+                    "date": d.isoformat(), "question": question,
+                    "warning": "tea-region question includes both Shizuoka and Mie as plausible correct answers"
+                })
             if re.search(r"(?:海岸|沿岸).*(?:長雨|長期間の雨).*(?:高潮|高波)|長雨による高潮", question):
                 result["content_warnings"].append({
                     "date": d.isoformat(), "question": question,
