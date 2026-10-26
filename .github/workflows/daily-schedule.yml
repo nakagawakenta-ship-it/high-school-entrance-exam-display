@@ -5,6 +5,7 @@ on:
     paths:
       - 'scripts/generate_diverse_daily.py'
       - 'scripts/expanded_question_bank.py'
+      - 'prepared/*.json'
       - '.github/workflows/daily-schedule.yml'
   schedule:
     - cron: '0 15 * * *'   # 00:00 JST: prepare today's display well before wake-up
