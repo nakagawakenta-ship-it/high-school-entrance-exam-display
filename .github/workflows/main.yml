@@ -6,6 +6,7 @@ on:
     paths:
       - daily.json
       - scripts/generate_display.py
+      - .github/workflows/main.yml
 
 permissions:
   contents: write
@@ -49,4 +50,4 @@ jobs:
           fi
           git commit -m "Generate e-paper display data"
           git pull --rebase origin main
-          git push origin main
+          git push origin "HEAD:${GITHUB_REF_NAME}"
