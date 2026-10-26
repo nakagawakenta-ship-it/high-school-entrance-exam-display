@@ -5,6 +5,7 @@ on:
     paths:
       - 'scripts/generate_diverse_daily.py'
       - 'scripts/expanded_question_bank.py'
+      - 'prepared/*.json'
       - '.github/workflows/daily-schedule.yml'
   schedule:
     - cron: '0 15 * * *'   # 00:00 JST: prepare today's display well before wake-up
@@ -95,7 +96,7 @@ jobs:
           fi
           git commit -m "Daily e-paper update $(TZ=Asia/Tokyo date +%F)"
           for i in 1 2 3; do
-            git pull --rebase origin main && git push origin main && exit 0
+            git pull --rebase origin main && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
             sleep 10
           done
           exit 1
