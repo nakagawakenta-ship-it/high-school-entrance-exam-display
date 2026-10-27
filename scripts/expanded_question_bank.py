@@ -506,7 +506,7 @@ def question(kind, r):
         place=r.choice(['the library','the station','the city museum','the nearest bus stop','the post office','the science museum','the city hall','the public pool','the art gallery','the community center','the nearest pharmacy','the bus terminal','the train platform','the school gym','the sports center','the history museum','the concert hall','the information desk','the bookshop','the town office','the nearest bank','the police station','the aquarium','the botanical garden','the shopping center','the local hospital','the ferry port','the language school','the tourist office','the nearest restroom','the main entrance','the conference room','the music room','the swimming pool','the ticket counter','the post office near here','the nearest park','the city library','the train station exit','the meeting room'])
         return f'A visitor asks about {place}: Could you tell me ( )?', [f'where {place} is',f'where is {place}',f'where does {place}',f'where {place}'],f'where {place} is'
     if kind == 'superlative':
-        mode=r.randrange(4)
+        mode=r.randrange(8)
         if mode==0:
             names=r.sample(['Ken','Yuta','Mika','Emi','Hana','Sota','Rina','Aki'],3)
             heights=r.sample(range(145,181,5),3); tallest=names[heights.index(max(heights))]
@@ -518,7 +518,27 @@ def question(kind, r):
             names=r.sample(['Mika','Ken','Yuta','Rina','Emi','Hana'],3); times=r.sample(range(12,31),3)
             fastest=names[times.index(min(times))]; data=', '.join(f'{n}: {t} seconds' for n,t in zip(names,times))
             return f'Race times ({data}). Who ran the fastest?',[fastest]+[n for n in names if n!=fastest]+['They tied'],fastest
-        return 'Choose the sentence that correctly compares three places.',['Mount A is the highest of the three.','Mount A is higher than all the three.','Mount A is the most high.','Mount A is as highest as B.'],'Mount A is the highest of the three.'
+        if mode==3:
+            return 'Choose the sentence that correctly compares three places.',['Mount A is the highest of the three.','Mount A is higher than all the three.','Mount A is the most high.','Mount A is as highest as B.'],'Mount A is the highest of the three.'
+        if mode==4:
+            labels=['blue bag','red bag','green bag']; weights=r.sample(range(2,11),3)
+            heaviest=labels[weights.index(max(weights))]
+            data=', '.join(f'{label}: {weight} kg' for label,weight in zip(labels,weights))
+            return f'Bag weights ({data}). Which bag is the heaviest?',[heaviest]+[label for label in labels if label!=heaviest]+['They weigh the same'],heaviest
+        if mode==5:
+            labels=['notebook A','notebook B','notebook C']; prices=r.sample(range(100,1001,50),3)
+            cheapest=labels[prices.index(min(prices))]
+            data=', '.join(f'{label}: {price} yen' for label,price in zip(labels,prices))
+            return f'Prices of three notebooks: {data}. Which notebook is the cheapest?',[cheapest]+[label for label in labels if label!=cheapest]+['They cost the same'],cheapest
+        if mode==6:
+            labels=['Mountain A','Mountain B','Mountain C']; heights=r.sample(range(800,3001,100),3)
+            highest=labels[heights.index(max(heights))]
+            data=', '.join(f'{label}: {height} m' for label,height in zip(labels,heights))
+            return f'The heights of three mountains are {data}. Which mountain is the highest?',[highest]+[label for label in labels if label!=highest]+['They are the same height'],highest
+        labels=['Club A','Club B','Club C']; votes=r.sample(range(10,101,5),3)
+        winner=labels[votes.index(max(votes))]
+        data=', '.join(f'{label}: {count} votes' for label,count in zip(labels,votes))
+        return f'Votes for three school clubs: {data}. Which club received the most votes?',[winner]+[label for label in labels if label!=winner]+['They received the same number'],winner
     if kind == 'dialogue_intent':
         stem,answer,wrong=r.choice([
             ('A: Thank you for helping me. B: ( )','You are welcome.',['I am sorry.','Here you are.','Good luck yesterday.']),
