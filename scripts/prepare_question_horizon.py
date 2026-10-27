@@ -22,11 +22,29 @@ for p in glob.glob('daily/*.json'):
     except (ValueError,OSError,KeyError):pass
 Path('prepared').mkdir(exist_ok=True)
 count=0
+fallback_days=[]
 d=start
 while d<=end:
-    cutoff=d-timedelta(days=7)
-    recent_templates={key for history_day,keys in recent_history if cutoff <= history_day < d for key in keys}
-    questions=fresh_questions(d,seen,recent_templates)
+    questions=None
+    cooldown_used=None
+    for cooldown in (7,5,3):
+        cutoff=d-timedelta(days=cooldown)
+        recent_templates={key for history_day,keys in recent_history if cutoff <= history_day < d for key in keys}
+        candidate_seen=set(seen)
+        try:
+            candidate_questions=fresh_questions(d,candidate_seen,recent_templates)
+        except RuntimeError:
+            if cooldown==3:
+                raise
+            continue
+        questions=candidate_questions
+        seen=candidate_seen
+        cooldown_used=cooldown
+        break
+    if questions is None:
+        raise RuntimeError('Unable to generate questions with adaptive template cooldown: '+str(d))
+    if cooldown_used < 7:
+        fallback_days.append({'date':d.isoformat(),'cooldown_days':cooldown_used})
     if len(questions)!=10:raise RuntimeError('Incorrect count '+str(d))
     if sum(q['subject']=='english' for q in questions)!=5:raise RuntimeError('English count '+str(d))
     if sum(q['subject']=='social' for q in questions)!=5:raise RuntimeError('Social count '+str(d))
@@ -40,3 +58,4 @@ while d<=end:
     count+=10
     d+=timedelta(days=1)
 print('PREPARED',count,'questions from',start.isoformat(),'through',end.isoformat())
+print('COOLDOWN_FALLBACK_DAYS',len(fallback_days),json.dumps(fallback_days,ensure_ascii=False))
