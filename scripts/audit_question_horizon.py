@@ -245,7 +245,7 @@ result["template_duplicate_groups"] = [
     v for v in by_template.values() if len({x["date"] for x in v}) > 1
 ]
 
-# The future bank must not repeat a normalized template within three days.
+# The future bank must not repeat a normalized template within fourteen days.
 recent_by_template = defaultdict(list)
 for q in all_questions:
     if q["source"] == "prepared" and q["date"] > TODAY_JST.isoformat():
@@ -258,7 +258,7 @@ for entries in recent_by_template.values():
         da = date.fromisoformat(a["date"])
         for b in entries[i + 1:]:
             db = date.fromisoformat(b["date"])
-            if (db - da).days <= 3:
+            if (db - da).days <= 14:
                 result["recent_template_repeat_groups"].append({"a": a, "b": b})
 
 # Similarity candidates are review warnings, not automatic failures; common skills can share words.
