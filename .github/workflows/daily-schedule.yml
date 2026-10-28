@@ -73,10 +73,33 @@ jobs:
           assert sum(q['subject']=='social' for q in qs)==5
           assert len({q['question'] for q in qs})==10
           for q in qs:
-              assert len(q.get('choices',[]))==4
-              assert q.get('answer') in q['choices']
+              choices=q.get('choices',[])
+              assert len(choices)==4, (q.get('id'), 'expected four choices')
+              assert len(set(choices))==4, (q.get('id'), 'duplicate choices')
+              assert q.get('answer') in choices, (q.get('id'), 'answer missing from choices')
+          ids=[q.get('id') for q in qs if q.get('id')]
+          assert len(ids)==len(set(ids)), 'duplicate question IDs'
           assert pathlib.Path(f'daily/{today}.json').exists()
           print('VALIDATED',today)
+          PY
+
+      - name: Audit full question horizon
+        run: |
+          python scripts/audit_question_horizon.py | tee /tmp/question-audit-summary.json
+          python - <<'PY'
+          import json, os
+          d=json.load(open('/tmp/question-audit-summary.json',encoding='utf-8'))
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a',encoding='utf-8') as f:
+              f.write("## 日次更新時の全期間品質監査\\n\\n")
+              f.write(f"- 対象期間: {d['start']}〜{d['end']}\\n")
+              f.write(f"- 検査: {d['days_checked']}日 / {d['questions_checked']}問\\n")
+              f.write(f"- 未来事前生成: {d['prepared_future_days_checked']}日\\n")
+              f.write(f"- 判定: **{d['quality_status']}**\\n")
+              f.write(f"- 完全一致重複: {d['exact_duplicate_group_count']}\\n")
+              f.write(f"- 類似テンプレート群: {d['template_duplicate_group_count']}\\n")
+              f.write(f"- 類似候補ペア: {d['near_duplicate_pair_count']}\\n")
+              if d['quality_status'] != 'pass':
+                  f.write("\\n> 類似候補はレビュー対象です。構造エラー・既知の内容警告は監査の終了コードで失敗扱いになります。\\n")
           PY
 
       - name: Generate display
