@@ -83,6 +83,7 @@ jobs:
           print('VALIDATED',today)
           PY
 
+      # Keep the complete date-range audit in the daily path, not only on its separate schedule.
       - name: Audit full question horizon
         run: |
           python scripts/audit_question_horizon.py | tee /tmp/question-audit-summary.json
