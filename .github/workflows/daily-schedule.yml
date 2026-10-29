@@ -103,6 +103,15 @@ jobs:
                   f.write("\n> 類似候補はレビュー対象です。構造エラー・既知の内容警告は監査の終了コードで失敗扱いになります。\n")
           PY
 
+      - name: Preserve daily quality audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-question-quality-audit
+          path: question_quality_audit.json
+          if-no-files-found: warn
+          retention-days: 30
+
       - name: Generate display
         run: |
           python scripts/generate_display.py
