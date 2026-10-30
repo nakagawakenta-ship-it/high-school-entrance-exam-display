@@ -95,18 +95,18 @@ jobs:
           import json, os
           d=json.load(open('/tmp/question-audit-summary.json',encoding='utf-8'))
           with open(os.environ['GITHUB_STEP_SUMMARY'],'a',encoding='utf-8') as f:
-              f.write("## 日次更新時の全期間品質監査\\n\\n")
-              f.write(f"- 対象期間: {d['start']}〜{d['end']}\\n")
-              f.write(f"- 検査: {d['days_checked']}日 / {d['questions_checked']}問\\n")
-              f.write(f"- 未来事前生成: {d['prepared_future_days_checked']}日\\n")
-              f.write(f"- 判定: **{d['quality_status']}**\\n")
-              f.write(f"- 完全一致重複: {d['exact_duplicate_group_count']}\\n")
-              f.write(f"- 類似テンプレート群: {d['template_duplicate_group_count']}\\n")
-              f.write(f"- 類似候補ペア: {d['near_duplicate_pair_count']}\\n")
-              f.write(f"- 構造エラー: {len(d['errors'])}\\n")
-              f.write(f"- 内容警告: {d['content_warning_count']}\\n")
+              f.write("## 日次更新時の全期間品質監査\n\n")
+              f.write(f"- 対象期間: {d['start']}〜{d['end']}\n")
+              f.write(f"- 検査: {d['days_checked']}日 / {d['questions_checked']}問\n")
+              f.write(f"- 未来事前生成: {d['prepared_future_days_checked']}日\n")
+              f.write(f"- 判定: **{d['quality_status']}**\n")
+              f.write(f"- 完全一致重複: {d['exact_duplicate_group_count']}\n")
+              f.write(f"- 類似テンプレート群: {d['template_duplicate_group_count']}\n")
+              f.write(f"- 類似候補ペア: {d['near_duplicate_pair_count']}\n")
+              f.write(f"- 構造エラー: {len(d['errors'])}\n")
+              f.write(f"- 内容警告: {d['content_warning_count']}\n")
               if d['quality_status'] != 'pass':
-                  f.write("\\n> 類似候補はレビュー対象です。構造エラー・既知の内容警告がある場合、このステップは失敗します。\\n")
+                  f.write("\n> 類似候補はレビュー対象です。構造エラー・既知の内容警告がある場合、このステップは失敗します。\n")
           PY
           if [[ "$audit_status" -ne 0 ]]; then
             echo "::error::Full-horizon question audit failed (exit code $audit_status). See question_quality_audit.json artifact."
