@@ -286,7 +286,7 @@ result["recent_template_repeat_count"] = len(result["recent_template_repeat_grou
 result["content_warning_count"] = len(result["content_warnings"])
 result["daily_history_questions_checked"] = len(history)
 result["content_warnings"] = result["content_warnings"][:300]
-result["near_duplicate_pairs"] = result["near_duplicate_pairs"][:1000]
+# Keep every similarity candidate in the downloadable audit artifact.
 result["template_duplicate_groups"] = result["template_duplicate_groups"][:300]
 
 Path("question_quality_audit.json").write_text(
